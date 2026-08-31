@@ -69,7 +69,7 @@ jobs:
           subject: "🔔 Radar de licitaciones - nuevas oportunidades ${{ github.run_started_at }}"
           from: "Radar Canalis"
           to: ${{ env.DESTINATARIOS }}
-          body: file://data/alertas_nuevas.md
+          html_body: file://data/alertas_nuevas.html
 
       - name: Correo de prueba (solo si se marca la casilla al lanzar a mano)
         if: github.event_name == 'workflow_dispatch' && inputs.probar_correo
@@ -84,4 +84,4 @@ jobs:
           subject: "✅ Prueba del Radar de licitaciones - informe actual"
           from: "Radar Canalis"
           to: ${{ env.DESTINATARIOS }}
-          body: file://data/informe.md
+          html_body: file://data/informe.html
