@@ -1,4 +1,4 @@
-# 💧 Radar de Licitaciones de Agua · España y Portugal
+# Radar de Licitaciones de Agua para España y Portugal
 
 Sistema **automático y gratuito** de vigilancia de licitaciones de renovación y
 rehabilitación de redes de agua (con foco en tecnologías sin zanja: CIPP, manga,
@@ -18,28 +18,7 @@ Cada mañana laborable, sin que nadie toque nada:
 
 ---
 
-## 🚀 Puesta en marcha (una sola vez, ~20 minutos, sin programar)
-
-1. **Crea una cuenta gratuita en [github.com](https://github.com)** (si no tienes).
-2. Arriba a la derecha, pulsa **“+” → New repository**. Nombre: `radar-agua`.
-   Déjalo **Public** (necesario para que Pages y Actions sean 100% gratuitos) y pulsa
-   **Create repository**.
-3. En el repositorio recién creado: **“uploading an existing file”** (o Add file →
-   Upload files). **Arrastra TODO el contenido de esta carpeta** (incluida la carpeta
-   `.github` — si tu ordenador la oculta, sube el ZIP descomprimido completo).
-   Pulsa **Commit changes**.
-4. Activa el panel web: **Settings → Pages → Branch: `main` / carpeta `/docs` → Save**.
-   En unos minutos tu panel estará en `https://TU-USUARIO.github.io/radar-agua/`.
-5. Activa las alertas por correo: en la portada del repositorio pulsa
-   **Watch → All activity**. Cada Issue de alerta te llegará al email.
-6. Primera ejecución manual: pestaña **Actions → Radar diario → Run workflow**.
-   (Si GitHub pregunta si habilitas los workflows, acepta.)
-   En 2-3 minutos verás el resultado; a partir de ahí corre solo cada mañana laborable.
-
-Eso es todo. Coste: **0 €** (dentro de los límites gratuitos de GitHub, que este
-radar no llega ni a rozar).
-
-## 🔧 Ajustes sin tocar código
+## Ajustes sin tocar código
 
 - **Palabras clave, CPVs, umbral de alerta y pesos del score** → edita
   `config/ajustes.json` desde la web de GitHub (icono del lápiz ✏️).
@@ -64,12 +43,12 @@ python main.py --demo
 ```
 Usa `demo/muestras.json` y genera todas las salidas con datos de ejemplo.
 
-## ⚠️ Honestidad sobre los límites
+## Honestidad sobre los límites
 
 - **Lo que cubre:** todo lo publicado oficialmente en PLACSP (incl. agregadas),
   TED y BASE — licitaciones, anuncios previos, consultas preliminares y
   redacciones de proyecto.
-- **Lo que NO cubre (capa humana):** actas de plenos, planes directores en PDF,
+- **Lo que NO cubre (la capa humana):** actas de plenos, planes directores en PDF,
   notas de prensa y contactos comerciales. Esas señales se siguen trabajando en el
   **Excel maestro** (ficha comercial + scoring de 13 criterios) con la rutina
   semanal.
@@ -82,7 +61,7 @@ Usa `demo/muestras.json` y genera todas las salidas con datos de ejemplo.
   sustituye al análisis comercial de 13 criterios del Excel maestro.
 - **Verifica siempre** fechas e importes en la fuente oficial antes de actuar.
 
-## 🧭 Flujo de trabajo recomendado
+## Flujo de trabajo recomendado
 
 1. Te llega el correo del Issue de alerta (o miras el panel el lunes).
 2. Abres el enlace oficial de cada detección y verificas datos.
