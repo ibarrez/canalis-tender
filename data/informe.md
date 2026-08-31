@@ -1,6 +1,6 @@
 # Informe del radar — 31/08/2026
 
-Detecciones de los últimos 7 días: **110**. Top 10 por puntuación:
+Detecciones de los últimos 7 días: **111**. Top 10 por puntuación:
 
 1. **[80]** ACOSOL — Contratación por lotes de los trabajos de diseño, fabricación, suministro e instalación de manga continua estructural para la rehabilitación de colectores de la red de saneamiento  · 9.990.909 € · sin zanja: manga, manga continua · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=u5Y%2FY5o%2FUeB%2FR5QFTlaM4A%3D%3D)
 2. **[77]** ACOSOL — contratación por lotes del servicio de dirección facultativa de los trabajos de rehabilitación de colectores de la red de saneamiento integral de acosol, s.a. con manga cipp · 500.992 € · sin zanja: cipp, manga · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=259MiIPtVk7mnwcj%2BxbdTg%3D%3D)
