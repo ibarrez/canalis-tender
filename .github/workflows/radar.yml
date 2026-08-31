@@ -2,8 +2,8 @@ name: Radar diario
 
 on:
   schedule:
-    - cron: "30 5 * * 1-5"   # lunes a viernes, 05:30 UTC (~07:30 en España)
-  workflow_dispatch: {}       # permite ejecutarlo a mano con el botón "Run workflow"
+    - cron: "30 5 * * 1-5"
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -17,6 +17,7 @@ jobs:
   radar:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+
     steps:
       - name: Descargar el repositorio
         uses: actions/checkout@v4
@@ -42,3 +43,9 @@ jobs:
 
       - name: Avisar por Issue si hay alertas nuevas
         if: ${{ hashFiles('data/alertas_nuevas.md') != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "🔔 Radar: nuevas oportunidades $(date -u +'%d/%m/%Y')" \
+            --body-file data/alertas_nuevas.md
