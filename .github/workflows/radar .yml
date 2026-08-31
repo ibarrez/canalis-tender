@@ -17,7 +17,6 @@ jobs:
   radar:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
     steps:
       - name: Descargar el repositorio
         uses: actions/checkout@v4
@@ -42,10 +41,8 @@ jobs:
           git push
 
       - name: Avisar por Issue si hay alertas nuevas
-        if: ${{ hashFiles('data/alertas_nuevas.md') != '' }}
+        if: hashFiles('data/alertas_nuevas.md') != ''
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh issue create \
-            --title "🔔 Radar: nuevas oportunidades $(date -u +'%d/%m/%Y')" \
-            --body-file data/alertas_nuevas.md
+          gh issue create --title "Radar - nuevas oportunidades $(date -u +'%d/%m/%Y')" --body-file data/alertas_nuevas.md
