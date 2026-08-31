@@ -1,0 +1,85 @@
+id,pais,region,entidad,aliases
+E-001,España,Andalucía,ACOSOL,acosol|acosol
+E-002,España,Madrid,Canal de Isabel II,canal de isabel ii|canal de isabel|canal gestion
+E-003,España,Región de Murcia,Mancomunidad de los Canales del Taibilla,mancomunidad de los canales del taibilla|canales del taibilla
+E-004,España,Estatal,ACUAES,acuaes
+E-005,España,Estatal,ACUAMED,acuamed
+E-006,España,Castilla y León,AQUAVALL,aquavall|aquavall|agua de valladolid
+E-007,España,Andalucía,EMASESA,emasesa
+E-008,España,Andalucía,EMASA Málaga,emasa malaga
+E-009,España,Andalucía,EMACSA,emacsa
+E-010,España,Galicia,EMALCSA,emalcsa
+E-011,España,Asturias,Empresa Municipal de Aguas de Gijón,empresa municipal de aguas de gijon|aguas de gijon
+E-012,España,Illes Balears,EMAYA,emaya
+E-013,España,Castilla y León,Aguas de Burgos,aguas de burgos
+E-014,España,Andalucía,Aguas de Cádiz,aguas de cadiz
+E-015,España,Andalucía,APEMSA,apemsa
+E-016,España,Andalucía,GIAHSA,giahsa
+E-017,España,Andalucía,EMPROACSA (Aguas de Córdoba),emproacsa|emproacsa|aguas de cordoba
+E-018,España,Andalucía,ARCGISA,arcgisa
+E-019,España,Andalucía,GALASA,galasa
+E-020,España,Andalucía,Aguas del Huesna,aguas del huesna
+E-021,España,Cantabria,MARE,mare
+E-022,España,Illes Balears,ABAQUA,abaqua
+E-023,España,Navarra,NILSA,nilsa
+E-024,España,Región de Murcia,ESAMUR,esamur
+E-025,España,Comunitat Valenciana,EPSAR,epsar
+E-026,España,Cataluña,ATL — Ens d'Abastament d'Aigua Ter-Llobregat,atl|ens d'abastament d'aigua ter-llobregat|ter-llobregat|ter llobregat|abastament ter
+E-027,España,Cataluña,TAIGUA (Terrassa),taigua
+E-028,España,Cataluña,Aigües de Manresa,aigues de manresa
+E-029,España,Cataluña,Aigües de Reus,aigues de reus
+E-030,España,Cataluña,Aigües de Mataró,aigues de mataro
+E-031,España,País Vasco,Consorcio de Aguas Bilbao Bizkaia,consorcio de aguas bilbao bizkaia|consorcio de aguas bilbao|bilbao bizkaia ur
+E-032,España,País Vasco,Aguas del Añarbe,aguas del anarbe
+E-033,España,País Vasco,Servicios de Txingudi,servicios de txingudi
+E-034,España,Castilla-La Mancha,Mancomunidad de Aguas del Sorbe,mancomunidad de aguas del sorbe
+E-035,España,Navarra,SCPSA — Servicios de la Comarca de Pamplona,scpsa|servicios de la comarca de pamplona|scpsa|comarca de pamplona|mancomunidad de la comarca de pamplona
+E-036,España,Navarra,Servicios de Montejurra,servicios de montejurra
+E-037,España,Navarra,Junta Municipal de Aguas de Tudela,junta municipal de aguas de tudela
+E-038,España,Aragón,Servicio Municipal de Aguas de Zaragoza,servicio municipal de aguas de zaragoza|ecociudad zaragoza
+E-039,España,Cataluña,Aigües de Barcelona,aigues de barcelona|aigues de barcelona|aguas de barcelona
+E-040,España,Cataluña,EMATSA,ematsa
+E-041,España,Comunitat Valenciana,EMIVASA,emivasa|emivasa|aguas de valencia
+E-042,España,Región de Murcia,EMUASA,emuasa
+E-043,España,Comunitat Valenciana,Aguas de Alicante (AMAEM),aguas de alicante|amaem|aguas municipalizadas de alicante
+E-044,España,Comunitat Valenciana,Aigües d'Elx,aigues d'elx
+E-045,España,Comunitat Valenciana,Aigües de Sagunt,aigues de sagunt
+E-046,España,Castilla-La Mancha,Aguas de Albacete,aguas de albacete
+E-047,España,Castilla y León,Aguas de León,aguas de leon
+E-048,España,Andalucía,Aguas de Huelva,aguas de huelva
+E-049,España,Andalucía,AGUASVIRA,aguasvira
+E-050,España,Andalucía,ASTOSAM,astosam
+E-051,España,Andalucía,Aguas de Benahavís,aguas de benahavis
+E-052,España,Canarias,Aguas de Telde,aguas de telde
+E-053,Portugal,Nacional,Grupo Águas de Portugal (AdP),grupo aguas de portugal
+E-054,Portugal,Lisboa,EPAL,epal|epal
+E-055,Portugal,Norte,Águas do Norte,aguas do norte
+E-056,Portugal,Norte,Águas do Douro e Paiva,aguas do douro e paiva
+E-057,Portugal,Norte,SIMDOURO,simdouro
+E-058,Portugal,Centro,Águas da Região de Aveiro (AdRA),aguas da regiao de aveiro
+E-059,Portugal,Centro,Águas do Centro Litoral,aguas do centro litoral
+E-060,Portugal,Centro / Alentejo,Águas do Vale do Tejo,aguas do vale do tejo
+E-061,Portugal,Lisboa,Águas do Tejo Atlântico,aguas do tejo atlantico
+E-062,Portugal,Lisboa,SIMARSUL,simarsul
+E-063,Portugal,Alentejo,Águas Públicas do Alentejo (AgdA),aguas publicas do alentejo
+E-064,Portugal,Alentejo,Águas de Santo André,aguas de santo andre
+E-065,Portugal,Algarve,Águas do Algarve,aguas do algarve
+E-066,Portugal,Norte,Águas e Energia do Porto,aguas e energia do porto|aguas e energia do porto|aguas do porto
+E-067,Portugal,Norte,Águas de Gaia,aguas de gaia
+E-068,Portugal,Norte,AGERE,agere
+E-069,Portugal,Norte,Vimágua,vimagua
+E-070,Portugal,Centro,Águas de Coimbra,aguas de coimbra
+E-071,Portugal,Lisboa e Vale do Tejo,Águas de Santarém,aguas de santarem
+E-072,Portugal,Lisboa e Vale do Tejo,Águas do Ribatejo,aguas do ribatejo
+E-073,Portugal,Norte,Águas do Alto Minho,aguas do alto minho
+E-074,Portugal,Norte,Águas do Interior Norte,aguas do interior norte
+E-075,Portugal,(verificar),APAL-SIM,apal-sim
+E-076,Portugal,Algarve,FAGAR,fagar
+E-077,Portugal,Alentejo,EMAS de Beja,emas de beja
+E-078,Portugal,Lisboa,SMAS de Almada,smas de almada
+E-079,Portugal,Lisboa,SMAS de Sintra,smas de sintra
+E-080,Portugal,Lisboa,SIMAS de Oeiras e Amadora,simas de oeiras e amadora
+E-081,Portugal,Lisboa,SIMAR de Loures e Odivelas,simar de loures e odivelas
+E-082,Portugal,Centro,SMAS de Leiria,smas de leiria
+E-083,Portugal,Centro,SMAS de Castelo Branco,smas de castelo branco
+E-084,Portugal,Centro,Águas de Viseu (SMAS),aguas de viseu|aguas de viseu|smas de viseu

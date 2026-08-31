@@ -1,0 +1,62 @@
+{
+  "_comentario": "Configuración del Radar. Edita este archivo desde GitHub (icono del lápiz) para ajustar palabras clave, pesos o fuentes. No borres las comas ni las comillas.",
+
+  "palabras_sin_zanja": [
+    "sin zanja", "cipp", "manga", "encamisado", "entubado", "sliplining", "slip lining",
+    "close-fit", "close fit", "pipe bursting", "liner estructural", "manga continua",
+    "manga curada", "curado uv", "curada in situ", "sem vala", "sem abertura de vala",
+    "revestimento estrutural", "reabilitacao de coletores", "reabilitacao de colectores",
+    "cured in place"
+  ],
+
+  "palabras_contexto_redes": [
+    "renovacion de red", "renovacion de redes", "renovacion de la red", "rehabilitacion de red",
+    "rehabilitacion de redes", "rehabilitacion de colector", "rehabilitacion del colector",
+    "rehabilitacion de colectores", "renovacion de tuberia", "renovacion de tuberias",
+    "renovacion de conduccion", "renovacion de conducciones", "sustitucion de colector",
+    "red de saneamiento", "red de abastecimiento", "colector", "emisario", "impulsion",
+    "conduccion en alta", "interceptor", "alcantarillado", "infiltracion", "intrusion salina",
+    "renovacao de condutas", "renovacao de redes", "reabilitacao de condutas", "adutora",
+    "emissario", "coletor", "colector", "rede de saneamento", "rede de abastecimento",
+    "infiltracoes", "aguas residuais", "drenagem de aguas residuais"
+  ],
+
+  "palabras_redaccion_proyecto": [
+    "redaccion de proyecto", "redaccion del proyecto", "redaccion de los proyectos",
+    "anteproyecto", "estudio de alternativas", "estudio de viabilidad", "consulta preliminar",
+    "servicios de ingenieria", "asistencia tecnica para la redaccion",
+    "elaboracao de projeto", "projeto de execucao", "estudo previo", "consulta preliminar ao mercado"
+  ],
+
+  "palabras_excluir": [
+    "manga por hombro", "manga de riego por aspersion", "vestuario", "uniformidad",
+    "jardineria", "alumbrado", "pavimentacion de aceras"
+  ],
+
+  "cpv_incluir": ["45231300", "45232150", "45232400", "45232410", "45232420", "45232440", "45232152", "45232100", "71322000", "71322200", "90400000", "90430000", "90480000"],
+
+  "umbral_alerta": 60,
+  "dias_ventana_informe": 7,
+  "max_paginas_atom": 20,
+
+  "pesos_score": {
+    "sin_zanja": 30,
+    "entidad_censo": 20,
+    "cpv_agua": 15,
+    "redaccion_proyecto": 15,
+    "contexto_redes": 10,
+    "importe": 20
+  },
+  "importe_max_puntos_eur": 5000000,
+
+  "fuentes": {
+    "placsp_perfiles": "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
+    "placsp_agregadas": "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores.atom",
+    "ted_endpoint": "https://api.ted.europa.eu/v3/notices/search",
+    "ted_query": "(place-of-performance IN (ESP PRT)) AND (classification-cpv IN (45231300* 45232150* 45232400* 45232410* 45232420* 45232440* 71322000* 90400000*)) SORT BY publication-date DESC",
+    "ted_fields": ["publication-number", "notice-title", "buyer-name", "publication-date", "deadline-date", "estimated-value-lot", "classification-cpv", "place-of-performance"],
+    "ted_limit": 100,
+    "base_endpoint": "https://www.base.gov.pt/Base4/pt/resultados/",
+    "base_terminos": ["reabilita\u00e7\u00e3o coletores", "renova\u00e7\u00e3o condutas", "reabilita\u00e7\u00e3o sem vala", "rede saneamento reabilita\u00e7\u00e3o", "adutora reabilita\u00e7\u00e3o"]
+  }
+}
