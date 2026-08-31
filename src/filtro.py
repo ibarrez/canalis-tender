@@ -1,27 +1,42 @@
 # -*- coding: utf-8 -*-
-"""Filtrado, cruce con el censo de entidades y puntuación automática 0-100.
+"""Filtrado, cruce con el censo y puntuación automática (v1.2).
 
-La puntuación automática NO sustituye al scoring comercial de 13 criterios
-del Excel maestro: mide únicamente la relevancia de la señal capturada
-(tecnología sin zanja, entidad del censo, CPV de agua, fase de redacción
-de proyecto, contexto de redes e importe).
+v1.2 — precisión del matching:
+- Las palabras clave se buscan como PALABRA COMPLETA, no como fragmento:
+  «manga» ya no aparece dentro de «permanganato» ni «mangas neumáticas»,
+  ni «mare» dentro de «Miramar», ni «atl» dentro de «atletismo».
+- Las entidades del censo se cruzan contra el ÓRGANO de contratación;
+  el título solo se usa para alias largos (≥6 caracteres, p. ej.
+  «aguasvira»), nunca para siglas cortas propensas a colarse.
+- Exclusiones fijas adicionales (festival manga, mangas neumáticas…),
+  que se suman a las de config/ajustes.json.
 """
 import math
+import re
 
 from .util import normalizar
 
+EXCLUSIONES_FIJAS = [
+    "festival manga", "manga neumatica", "mangas neumaticas",
+    "manga por hombro", "manga de riego",
+]
+
+
+def _busca(texto_norm, palabra_norm):
+    """Coincidencia de palabra/expresión completa (con límites de palabra)."""
+    return re.search(r"(?<!\w)" + re.escape(palabra_norm) + r"(?!\w)", texto_norm) is not None
+
 
 def _contiene(texto_norm, palabras):
-    encontradas = [p for p in palabras if p in texto_norm]
-    return encontradas
+    return [p for p in palabras if p and _busca(texto_norm, p)]
 
 
 def evaluar(det, ajustes, entidades):
-    """Enriquece la detección con matching y score. Devuelve True si es relevante."""
     texto = " ".join(str(det.get(c, "")) for c in ("titulo", "organo", "texto_extra", "expediente"))
     tn = normalizar(texto)
 
-    if _contiene(tn, [normalizar(p) for p in ajustes.get("palabras_excluir", [])]):
+    excluir = [normalizar(p) for p in ajustes.get("palabras_excluir", [])] + EXCLUSIONES_FIJAS
+    if _contiene(tn, excluir):
         return False
 
     sz = _contiene(tn, [normalizar(p) for p in ajustes["palabras_sin_zanja"]])
@@ -35,11 +50,15 @@ def evaluar(det, ajustes, entidades):
     titulo_n = normalizar(det.get("titulo", ""))
     entidad_match = None
     for e in entidades:
-        if any(a and (a in organo_n or a in titulo_n) for a in e["alias_norm"]):
-            entidad_match = e
+        for a in e["alias_norm"]:
+            if not a:
+                continue
+            if _busca(organo_n, a) or (len(a) >= 6 and _busca(titulo_n, a)):
+                entidad_match = e
+                break
+        if entidad_match:
             break
 
-    # Criterio de retención: algo tiene que conectarlo con redes de agua
     relevante = bool(sz) or bool(entidad_match and (ctx or cpv_ok or rp)) or (cpv_ok and ctx) or (ctx and rp)
     if not relevante:
         return False
@@ -62,14 +81,15 @@ def evaluar(det, ajustes, entidades):
         score += round(p["importe"] * min(1.0, math.log10(max(importe, 1)) / math.log10(tope)), 1)
 
     det["score"] = min(100, round(score))
-    det["senales"] = {
-        "sin_zanja": sz[:5], "contexto_redes": ctx[:5], "redaccion_proyecto": rp[:3],
-        "cpv_agua": cpv_ok,
-    }
+    det["senales"] = {"sin_zanja": sz[:5], "contexto_redes": ctx[:5],
+                      "redaccion_proyecto": rp[:3], "cpv_agua": cpv_ok}
     if entidad_match:
         det["entidad_censo"] = entidad_match["entidad"]
         det["entidad_id"] = entidad_match["id"]
         det["pais"] = entidad_match["pais"]
         det["region"] = entidad_match["region"]
+    else:
+        for k in ("entidad_censo", "entidad_id"):
+            det.pop(k, None)
     det["es_redaccion_proyecto"] = bool(rp)
     return True
