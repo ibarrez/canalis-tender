@@ -3,7 +3,12 @@ name: Radar diario
 on:
   schedule:
     - cron: "30 5 * * 1-5"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      probar_correo:
+        description: "Enviar un correo de prueba con el informe (aunque no haya alertas)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -12,6 +17,9 @@ permissions:
 concurrency:
   group: radar
   cancel-in-progress: false
+
+env:
+  DESTINATARIOS: "jacobo.rodriguez@grupocanalis.com,rodrigo.gonzalez@grupocanalis.com,laura.gonzalez@grupocanalis.com,info@grupocanalis.com"
 
 jobs:
   radar:
@@ -42,7 +50,38 @@ jobs:
 
       - name: Avisar por Issue si hay alertas nuevas
         if: hashFiles('data/alertas_nuevas.md') != ''
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh issue create --title "Radar - nuevas oportunidades $(date -u +'%d/%m/%Y')" --body-file data/alertas_nuevas.md
+
+      - name: Enviar correo si hay alertas nuevas
+        if: hashFiles('data/alertas_nuevas.md') != ''
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "🔔 Radar de licitaciones - nuevas oportunidades ${{ github.run_started_at }}"
+          from: "Radar Canalis"
+          to: ${{ env.DESTINATARIOS }}
+          body: file://data/alertas_nuevas.md
+
+      - name: Correo de prueba (solo si se marca la casilla al lanzar a mano)
+        if: github.event_name == 'workflow_dispatch' && inputs.probar_correo
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "✅ Prueba del Radar de licitaciones - informe actual"
+          from: "Radar Canalis"
+          to: ${{ env.DESTINATARIOS }}
+          body: file://data/informe.md
