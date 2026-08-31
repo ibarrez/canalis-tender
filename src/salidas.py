@@ -69,7 +69,7 @@ def generar_excel(historico, nuevas, ajustes):
 
 
 # ------------------------------------------------ correo HTML (estilo v2.0)
-# Gramatica visual tomada del Polestar Sustainability Report 2025:
+# Gramatica visual tomada de Canalis Brand Book:
 # fondo hueso #EBECE6, rojo #E03C32 como unico acento, Helvetica Neue,
 # tarjetas planas con cifra gigante, filas tipo indice, mucho aire.
 # Imagenes: subir a la carpeta docs/ con estos nombres exactos.
