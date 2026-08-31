@@ -1,11 +1,17 @@
-# Informe del radar — 06/08/2026
+# Informe del radar — 31/08/2026
 
-Detecciones de los últimos 7 días: **4**. Top 10 por puntuación:
+Detecciones de los últimos 7 días: **102**. Top 10 por puntuación:
 
-1. **[95]** ACOSOL — Servicio de diseño, fabricación, suministro e instalación para la rehabilitación mediante manga de los colectores del saneamiento integral, tramo Marbella–Estepona (Lote 1) · 4.030.000 € · sin zanja: manga · [PLACSP](https://contrataciondelestado.es/)
-2. **[94]** Águas e Energia do Porto — Empreitada de reabilitação sem vala de coletores de águas residuais na zona ribeirinha · 2.100.000 € · sin zanja: sem vala · [TED](https://ted.europa.eu/)
-3. **[76]** AQUAVALL — Redacción de proyecto de renovación de la red de abastecimiento en alta, tramo norte · 180.000 € · **REDACCIÓN DE PROYECTO** · [PLACSP](https://contrataciondelestado.es/)
-4. **[48]** SIMAS de Oeiras e Amadora — Renovação de condutas de abastecimento em fibrocimento — várias freguesias · 890.000 € · [BASE](https://www.base.gov.pt/)
+1. **[80]** ACOSOL — Contratación por lotes de los trabajos de diseño, fabricación, suministro e instalación de manga continua estructural para la rehabilitación de colectores de la red de saneamiento  · 9.990.909 € · sin zanja: manga, manga continua · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=u5Y%2FY5o%2FUeB%2FR5QFTlaM4A%3D%3D)
+2. **[77]** ACOSOL — contratación por lotes del servicio de dirección facultativa de los trabajos de rehabilitación de colectores de la red de saneamiento integral de acosol, s.a. con manga cipp · 500.992 € · sin zanja: cipp, manga · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=259MiIPtVk7mnwcj%2BxbdTg%3D%3D)
+3. **[70]** Canal de Isabel II — Obras del proyecto de Construcción para la adecuación al PNCA de la EDAR de la Poveda y redacción del proyecto y ejecución de las obras del Tratamiento cuaternario de la EDAR la Po · 79.450.914 € · **REDACCIÓN DE PROYECTO** · [PLACSP](https://contratos-publicos.comunidad.madrid/contrato-publico/obras-proyecto-construccion-adecuacion-pnca-edar-poveda-redaccion-proyecto)
+4. **[70]** EMATSA — L'objecte del present contracte son les obres de conservació i manteniment de col·lectors de la xarxa de clavegueram gestionada per EMATSA mitjançant instal·lació de mànega continu · 4.401.809 € · sin zanja: cipp, curada in situ · [PLACSP](https://contractaciopublica.cat/ca/detall-publicacio/f39723ec-587b-4848-b53d-0180e5c0ff0d/300867025)
+5. **[67]** EMAYA — Servicio de redacción de proyecto básico de nueva IDAM (Instalación Desaladora de Agua de Mar) y tramitación administrativa de permisos vinculados para EMAYA · 603.300 € · **REDACCIÓN DE PROYECTO** · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=qt5FN9id8YLIGlsa0Wad%2Bw%3D%3D)
+6. **[67]** ACOSOL — Servicio de redacción del estudio de alternativas, estudios ambientales y anteproyecto de la remodelación de la E.D.A.R. Cerro del Águila (Fuengirola - Mijas) para ACOSOL, S.A. · 490.349 € · **REDACCIÓN DE PROYECTO** · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=EFuDWPmaJjQ2wEhQbcAqug%3D%3D)
+7. **[65]** EMALCSA — Conservación, reparación y mantenimiento de las infraestructuras de agua y alcantarillado gestionadas por Emalcsa · 4.683.636 € · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=M48%2BHjPpqKeExvMJXBMHHQ%3D%3D)
+8. **[65]** Canal de Isabel II — Contrato de Obras del “Proyecto de Renovación de la Red de Saneamiento en el municipio de Santa María de la Alameda. Fase I (PLAN SANEA 2500)”. CYII 2026/24 · 5.244.670 € · [PLACSP](https://contratos-publicos.comunidad.madrid/contrato-publico/contrato-obras-proyecto-renovacion-red-saneamiento-municipio-santa-maria-alameda)
+9. **[64]** Canal de Isabel II — Contrato de Obras del “Proyecto de Renovación de la Red de Saneamiento en el municipio de Fresnedillas de la Oliva. Fase I (PLAN SANEA 2500)”. CYII 2026/11 · 3.310.312 € · [PLACSP](https://contratos-publicos.comunidad.madrid/contrato-publico/contrato-obras-proyecto-renovacion-red-saneamiento-municipio-fresnedillas-oliva)
+10. **[63]** Canal de Isabel II — Contratacion de Obras del "Proyecto de Renovación de la Red de Saneamiento en el municipio de Ambite. FASE I (PLAN SANEA 2500)" CYII 2025/29 · 1.143.886 € · [PLACSP](https://contratos-publicos.comunidad.madrid/contrato-publico/contratacion-obras-proyecto-renovacion-red-saneamiento-municipio-ambite-fase-i)
 
 ---
 _Radar automático: verifica siempre fechas e importes en la fuente oficial antes de actuar. Traslada las oportunidades maduras al Excel maestro (ficha comercial + scoring de 13 criterios)._
