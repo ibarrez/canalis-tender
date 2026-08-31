@@ -42,6 +42,3 @@ jobs:
 
       - name: Avisar por Issue si hay alertas nuevas
         if: ${{ hashFiles('data/alertas_nuevas.md') != '' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
