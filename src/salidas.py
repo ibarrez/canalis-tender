@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Salidas del radar: Excel de detecciones, dashboard HTML (GitHub Pages),
-informe de los últimos N días y fichero de alertas para el aviso por Issue."""
-from datetime import datetime, timedelta
+"""Salidas del radar (v1.3): Excel de detecciones, dashboard HTML (GitHub Pages),
+informe de los últimos N días, fichero de alertas para el Issue y — nuevo —
+versiones HTML de informe y alertas con enlaces clicables para el correo."""
+from datetime import timedelta
 
 import openpyxl
 from openpyxl.styles import Alignment, Font, PatternFill
@@ -67,6 +68,117 @@ def generar_excel(historico, nuevas, ajustes):
     wb.save(DATA / "Radar_Detecciones.xlsx")
 
 
+# ------------------------------------------------ correo HTML (estilo v2.0)
+# Gramatica visual tomada del Polestar Sustainability Report 2025:
+# fondo hueso #EBECE6, rojo #E03C32 como unico acento, Helvetica Neue,
+# tarjetas planas con cifra gigante, filas tipo indice, mucho aire.
+# Imagenes: subir a la carpeta docs/ con estos nombres exactos.
+LOGO_URL = "https://ibarrez.github.io/canalis-tender/logo.png"        # logotipo canalis en NEGRO, PNG fondo transparente
+FOTO_URL = "https://ibarrez.github.io/canalis-tender/cabecera.jpg"    # foto robot estudio blanco
+EXCEL_URL = "https://canalisst-my.sharepoint.com/:x:/g/personal/jacobo_rodriguez_grupocanalis_com/IQBBLqwTIrSmT5fiVcrQ-Jc0AXzAml8M9y6b6MABa_ffujk?e=Ah2fYE"
+
+NEGRO = "#111111"
+GRIS = "#6E6E69"
+GRISCLARO = "#B6B7B0"
+HUESO = "#EBECE6"
+LINEA = "#DADBD5"
+ROJO = "#E03C32"
+F = "'Helvetica Neue',Helvetica,Arial,sans-serif"
+
+
+def _esc(t):
+    return (str(t or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+
+def _millones(v):
+    if not v:
+        return ""
+    if v >= 1_000_000:
+        return (f"{v/1_000_000:.1f}".replace(".", ",") + "M")
+    return f"{v/1000:.0f}K"
+
+
+def _item_html(i, d):
+    ent = _esc(d.get("entidad_censo") or d.get("organo", ""))
+    score = d.get("score", 0)
+    color_score = ROJO if score >= 75 else GRISCLARO
+    meta = []
+    if d.get("importe_eur"):
+        imp = f"{d['importe_eur']:,.0f}".replace(",", ".")
+        meta.append(f'<span style="color:{NEGRO};font-weight:bold">{imp} EUR</span>')
+    if d.get("plazo_presentacion"):
+        meta.append(f'plazo {_esc(d["plazo_presentacion"])}')
+    sz = d.get("senales", {}).get("sin_zanja", [])
+    if sz:
+        meta.append(f'sin zanja: {_esc(", ".join(sz))}')
+    if d.get("es_redaccion_proyecto"):
+        meta.append(f'<span style="color:{ROJO}">redacción de proyecto</span>')
+    linea_meta = "&nbsp;&nbsp;/&nbsp;&nbsp;".join(meta)
+    return f"""<tr><td style="padding:20px 0;border-top:1px solid {LINEA}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+<td width="38" valign="top" style="font-family:{F};font-size:13px;color:{GRISCLARO};padding-top:2px">{i:02d}</td>
+<td valign="top" style="font-family:{F}">
+  <div style="font-size:15px;font-weight:bold;color:{NEGRO};letter-spacing:-0.2px">{ent}</div>
+  <div style="font-size:14px;color:{GRIS};line-height:1.5;margin:4px 0 8px">{_esc(d.get("titulo", ""))[:220]}</div>
+  <div style="font-size:12px;color:{GRIS};line-height:1.6">{linea_meta}</div>
+  <div style="margin-top:10px"><a href="{d.get("enlace", "#")}" style="font-family:{F};font-size:11px;letter-spacing:1.5px;color:{NEGRO};text-decoration:none;font-weight:bold">VER EXPEDIENTE <span style="color:{ROJO}">&#8594;</span></a></div>
+</td>
+<td width="64" valign="top" align="right" style="font-family:{F};font-size:26px;font-weight:bold;letter-spacing:-1px;color:{color_score}">{score}</td>
+</tr></table></td></tr>"""
+
+
+def _kpi_html(kpis):
+    celdas = ""
+    for i, (label, valor) in enumerate(kpis[:3]):
+        pad = "padding-right:8px" if i < len(kpis[:3]) - 1 else ""
+        celdas += f"""<td width="33%" valign="top" style="{pad}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+<td bgcolor="{HUESO}" style="padding:16px 16px 18px">
+<div style="font-family:{F};font-size:12px;color:{NEGRO};line-height:1.4;min-height:34px">{_esc(label)}</div>
+<div style="font-family:{F};font-size:42px;font-weight:bold;letter-spacing:-2px;color:{NEGRO};margin-top:22px">{_esc(valor)}</div>
+</td></tr></table></td>"""
+    return f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>{celdas}</tr></table>'
+
+
+def _envoltorio_html(titulo, subtitulo, cuerpo, kpis=None):
+    bloque_kpi = f'<tr><td bgcolor="#FFFFFF" style="padding:6px 36px 26px">{_kpi_html(kpis)}</td></tr>' if kpis else ""
+    return f"""<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background:{HUESO}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="{HUESO}"><tr><td align="center" style="padding:30px 14px">
+<table role="presentation" width="680" cellpadding="0" cellspacing="0" style="max-width:680px;width:100%">
+
+<tr><td bgcolor="#FFFFFF" style="padding:26px 36px 22px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+<td><img src="{LOGO_URL}" alt="canalis" height="22" style="display:inline-block;border:0;height:22px"></td>
+<td align="right" style="font-family:{F};font-size:10px;line-height:1.6;color:{NEGRO};text-align:right">Radar de licitaciones<br><span style="color:{GRIS}">España y Portugal</span></td>
+</tr></table></td></tr>
+
+<tr><td bgcolor="#FFFFFF"><img src="{FOTO_URL}" alt="" width="680" style="display:block;border:0;width:100%"></td></tr>
+
+<tr><td bgcolor="#FFFFFF" style="padding:36px 36px 24px">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td width="10" bgcolor="{ROJO}" style="width:10px;height:10px;font-size:0;line-height:0">&nbsp;</td>
+<td style="font-family:{F};font-size:17px;font-weight:bold;color:{NEGRO};padding-left:12px;letter-spacing:-0.2px">{_esc(titulo)}</td>
+</tr></table>
+<div style="font-family:{F};font-size:12px;color:{GRIS};margin-top:10px">{_esc(subtitulo)}</div>
+</td></tr>
+
+{bloque_kpi}
+
+<tr><td bgcolor="#FFFFFF" style="padding:0 36px 10px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">{cuerpo}</table>
+</td></tr>
+
+<tr><td bgcolor="#FFFFFF" style="padding:22px 36px 30px">
+<div style="border-top:1px solid {LINEA};padding-top:16px">
+<a href="{EXCEL_URL}" style="font-family:{F};font-size:11px;letter-spacing:1.5px;color:{NEGRO};text-decoration:none;font-weight:bold">EXCEL MAESTRO <span style="color:{ROJO}">&#8594;</span></a>
+<div style="font-family:{F};font-size:10px;color:{GRISCLARO};line-height:1.6;margin-top:12px">Verifica siempre las fechas e importes en la fuente oficial antes de actuar y traslada las oportunidades maduras al Excel maestro</div>
+</div></td></tr>
+
+</table></td></tr></table></body></html>"""
+
+
 def generar_informe(historico, ajustes):
     dias = int(ajustes.get("dias_ventana_informe", 7))
     corte = (ahora_utc() - timedelta(days=dias)).strftime("%Y-%m-%d")
@@ -84,16 +196,27 @@ def generar_informe(historico, ajustes):
                       f"{d.get('titulo', '')[:180]}{imp}{rp}{sz} · [{d.get('fuente')}]({d.get('enlace', '')})")
     lineas.append("\n---\n_Radar automático: verifica siempre fechas e importes en la fuente oficial antes de actuar. "
                   "Traslada las oportunidades maduras al Excel maestro (ficha comercial + scoring de 13 criterios)._")
-    contenido = "\n".join(lineas)
-    (DATA / "informe.md").write_text(contenido, encoding="utf-8")
-    return contenido
+    (DATA / "informe.md").write_text("\n".join(lineas), encoding="utf-8")
+    items = "".join(_item_html(i, d) for i, d in enumerate(top, 1)) or \
+        f'<tr><td style="font-family:{F};font-size:13px;color:{GRIS};padding:14px 0"><i>Sin detecciones relevantes en la ventana.</i></td></tr>'
+    kpis = [("Detectadas en la última semana", str(len(recientes))),
+            ("Importe agregado", _millones(sum(d.get("importe_eur") or 0 for d in top)) or "0"),
+            ("En fase de redacción", str(sum(1 for d in top if d.get("es_redaccion_proyecto"))))]
+    cuerpo = items
+    (DATA / "informe.html").write_text(
+        _envoltorio_html(f"Informe del radar {ahora_utc().strftime('%d/%m/%Y')}",
+                         "Rehabilitación y renovación de redes de agua. Tecnologías sin zanja.",
+                         cuerpo, kpis), encoding="utf-8")
 
 
 def generar_alertas(nuevas, ajustes):
-    """Escribe data/alertas_nuevas.md solo si hay novedades ≥ umbral (dispara el Issue)."""
-    ruta = DATA / "alertas_nuevas.md"
-    if ruta.exists():
-        ruta.unlink()
+    """Escribe alertas_nuevas.md (Issue) y alertas_nuevas.html (correo) solo si
+    hay novedades ≥ umbral. Si no las hay, elimina ambos ficheros."""
+    ruta_md = DATA / "alertas_nuevas.md"
+    ruta_html = DATA / "alertas_nuevas.html"
+    for r in (ruta_md, ruta_html):
+        if r.exists():
+            r.unlink()
     umbral = ajustes.get("umbral_alerta", 60)
     fuertes = sorted([d for d in nuevas if d.get("score", 0) >= umbral], key=lambda x: -x["score"])
     if not fuertes:
@@ -104,7 +227,15 @@ def generar_alertas(nuevas, ajustes):
         lineas.append(f"- **[{d['score']}]** {d.get('entidad_censo') or d.get('organo', '¿?')} — "
                       f"{d.get('titulo', '')[:200]}{imp} → {d.get('enlace', '')}")
     lineas.append("\nRevisar, verificar en fuente oficial y pasar al Excel maestro si procede.")
-    ruta.write_text("\n".join(lineas), encoding="utf-8")
+    ruta_md.write_text("\n".join(lineas), encoding="utf-8")
+    items = "".join(_item_html(i, d) for i, d in enumerate(fuertes[:25], 1))
+    kpis = [("Detectadas en este barrido", str(len(fuertes))),
+            ("Importe agregado", _millones(sum(d.get("importe_eur") or 0 for d in fuertes)) or "0"),
+            ("En fase de redacción", str(sum(1 for d in fuertes if d.get("es_redaccion_proyecto"))))]
+    ruta_html.write_text(
+        _envoltorio_html("Nuevas oportunidades detectadas",
+                         f"Barrido del {ahora_utc().strftime('%d/%m/%Y')}. PLACSP, TED y BASE. Score {umbral} o superior.",
+                         items, kpis), encoding="utf-8")
     return len(fuertes)
 
 
@@ -114,8 +245,8 @@ def _fila_html(d):
     sz = "🟢" if d.get("senales", {}).get("sin_zanja") else ""
     ent = d.get("entidad_censo") or d.get("organo", "")
     return (f"<tr><td class='sc'>{d.get('score', 0)}</td><td>{d.get('fecha_deteccion', '')}</td>"
-            f"<td>{d.get('fuente', '')}</td><td>{ent[:60]}</td>"
-            f"<td><a href='{d.get('enlace', '#')}' target='_blank'>{(d.get('titulo') or '')[:150]}</a> {rp}{sz}</td>"
+            f"<td>{d.get('fuente', '')}</td><td>{_esc(ent)[:60]}</td>"
+            f"<td><a href='{d.get('enlace', '#')}' target='_blank'>{_esc(d.get('titulo') or '')[:150]}</a> {rp}{sz}</td>"
             f"<td class='imp'>{imp}</td></tr>")
 
 
@@ -127,7 +258,7 @@ def generar_dashboard(historico, estado, ajustes):
     redaccion = [d for d in todas if d.get("es_redaccion_proyecto")]
     filas_top = "\n".join(_fila_html(d) for d in todas[:50])
     filas_rp = "\n".join(_fila_html(d) for d in redaccion[:30]) or "<tr><td colspan='6'>Sin señales de redacción de proyecto todavía.</td></tr>"
-    avisos = "".join(f"<li>{a}</li>" for a in estado.get("registro", []) if "aviso" in a)
+    avisos = "".join(f"<li>{_esc(a)}</li>" for a in estado.get("registro", []) if "aviso" in a)
     html = f"""<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Radar de Licitaciones de Agua ES-PT</title>
