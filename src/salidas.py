@@ -69,7 +69,7 @@ def generar_excel(historico, nuevas, ajustes):
 
 
 # ------------------------------------------------ correo HTML (estilo v2.0)
-# Gramatica visual tomada de Canalis Brand Book:
+# Gramatica visual tomada del Polestar Sustainability Report 2025:
 # fondo hueso #EBECE6, rojo #E03C32 como unico acento, Helvetica Neue,
 # tarjetas planas con cifra gigante, filas tipo indice, mucho aire.
 # Imagenes: subir a la carpeta docs/ con estos nombres exactos.
@@ -179,11 +179,25 @@ def _envoltorio_html(titulo, subtitulo, cuerpo, kpis=None):
 </table></td></tr></table></body></html>"""
 
 
+ESTADOS_CERRADOS = {"ADJ", "RES", "ANUL"}  # adjudicada, resuelta/formalizada, anulada (códigos PLACSP)
+
+
+def _vigente(d):
+    """True si la oportunidad sigue viva: no adjudicada/resuelta y con plazo no vencido.
+    Sin datos de estado o plazo se asume viva (mejor avisar de más que perder una)."""
+    if str(d.get("estado", "")).strip().upper() in ESTADOS_CERRADOS:
+        return False
+    plazo = str(d.get("plazo_presentacion", ""))[:10]
+    if len(plazo) == 10 and plazo < ahora_utc().strftime("%Y-%m-%d"):
+        return False
+    return True
+
+
 def generar_informe(historico, ajustes):
     dias = int(ajustes.get("dias_ventana_informe", 7))
     corte = (ahora_utc() - timedelta(days=dias)).strftime("%Y-%m-%d")
     recientes = [d for d in historico.values() if d.get("fecha_deteccion", "") >= corte]
-    top = sorted(recientes, key=lambda x: -x.get("score", 0))[:10]
+    top = sorted((d for d in recientes if _vigente(d)), key=lambda x: -x.get("score", 0))[:10]
     lineas = [f"# Informe del radar — {ahora_utc().strftime('%d/%m/%Y')}",
               f"\nDetecciones de los últimos {dias} días: **{len(recientes)}**. Top 10 por puntuación:\n"]
     if not top:
@@ -218,7 +232,8 @@ def generar_alertas(nuevas, ajustes):
         if r.exists():
             r.unlink()
     umbral = ajustes.get("umbral_alerta", 60)
-    fuertes = sorted([d for d in nuevas if d.get("score", 0) >= umbral], key=lambda x: -x["score"])
+    fuertes = sorted([d for d in nuevas if d.get("score", 0) >= umbral and _vigente(d)],
+                     key=lambda x: -x["score"])
     if not fuertes:
         return 0
     lineas = [f"## {len(fuertes)} detección(es) nueva(s) con score ≥ {umbral}\n"]
