@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Colector PLACSP: lee la sindicación ATOM diaria (formato CODICE) y extrae licitaciones.
+"""Colector PLACSP v1.5: sindicación ATOM diaria (formato CODICE).
 
 Cubre dos feeds: perfiles alojados en PLACSP y plataformas agregadas
-(que incluyen Cataluña, Euskadi, Navarra y otras plataformas propias).
-Los feeds se encadenan mediante <link rel="next">; se recorren hasta
-`max_paginas_atom` páginas o hasta superar la fecha del último barrido.
+(Cataluña, Euskadi, Navarra y otras). Los feeds se encadenan mediante
+<link rel="next">; se recorren hasta `max_paginas_atom` páginas.
+
+v1.5: extrae también el resultado de la adjudicación cuando el expediente
+lo publica (bloques TenderResult del CODICE): adjudicatario(s), importe de
+adjudicación, número de ofertas recibidas y fecha del acuerdo. Estos datos
+alimentan la sección "Adjudicaciones de la semana" del informe.
 """
 import xml.etree.ElementTree as ET
 
@@ -12,7 +16,7 @@ import requests
 
 from .util import nueva_deteccion, extraer_importe
 
-CABECERAS = {"User-Agent": "RadarAguaESPT/1.0 (herramienta interna de vigilancia de licitaciones)"}
+CABECERAS = {"User-Agent": "RadarAguaESPT/1.5 (herramienta interna de vigilancia de licitaciones)"}
 
 
 def _local(tag):
@@ -20,7 +24,6 @@ def _local(tag):
 
 
 def _buscar_texto(nodo, nombres):
-    """Primer texto de cualquier descendiente cuyo nombre local esté en `nombres`."""
     objetivo = set(nombres)
     for el in nodo.iter():
         if _local(el.tag) in objetivo and el.text and el.text.strip():
@@ -30,6 +33,41 @@ def _buscar_texto(nodo, nombres):
 
 def _todos_textos(nodo, nombre):
     return [el.text.strip() for el in nodo.iter() if _local(el.tag) == nombre and el.text and el.text.strip()]
+
+
+def _num(texto):
+    try:
+        return float(str(texto).replace(",", "."))
+    except (TypeError, ValueError):
+        return None
+
+
+def _resultados(entry):
+    """Lee los bloques TenderResult: (adjudicatarios, importe_adj, num_ofertas, fecha_adj)."""
+    adjudicatarios, importes, ofertas, fechas = [], [], [], []
+    for el in entry.iter():
+        if _local(el.tag) != "TenderResult":
+            continue
+        for sub in el.iter():
+            ln = _local(sub.tag)
+            if ln == "WinningParty":
+                nombre = _buscar_texto(sub, {"Name"})
+                if nombre and nombre not in adjudicatarios:
+                    adjudicatarios.append(nombre)
+            elif ln == "PayableAmount":
+                v = _num(sub.text)
+                if v:
+                    importes.append(v)
+            elif ln == "ReceivedTenderQuantity":
+                v = _num(sub.text)
+                if v:
+                    ofertas.append(int(v))
+            elif ln == "AwardDate" and sub.text and sub.text.strip():
+                fechas.append(sub.text.strip()[:10])
+    return (adjudicatarios[:5],
+            round(sum(importes), 2) if importes else None,
+            max(ofertas) if ofertas else None,
+            min(fechas) if fechas else None)
 
 
 def _procesar_entry(entry, feed_nombre):
@@ -46,19 +84,15 @@ def _procesar_entry(entry, feed_nombre):
         elif ln == "updated" and hijo.text:
             actualizado = hijo.text.strip()
 
-    organo = _buscar_texto(entry, {"PartyName", "Name"})  # órgano de contratación (CODICE)
+    organo = _buscar_texto(entry, {"PartyName", "Name"})
     estado = _buscar_texto(entry, {"ContractFolderStatusCode"})
     expediente = _buscar_texto(entry, {"ContractFolderID"})
     importe_txt = _buscar_texto(entry, {"EstimatedOverallContractAmount", "TotalAmount", "TaxExclusiveAmount"})
-    importe = None
-    if importe_txt:
-        try:
-            importe = float(importe_txt.replace(",", "."))
-        except ValueError:
-            importe = extraer_importe(importe_txt)
+    importe = _num(importe_txt) or extraer_importe(importe_txt)
     cpvs = _todos_textos(entry, "ItemClassificationCode")
     plazo = _buscar_texto(entry, {"EndDate"})
     resumen = _buscar_texto(entry, {"summary"}) or ""
+    adjudicatarios, importe_adj, num_ofertas, fecha_adj = _resultados(entry)
 
     return nueva_deteccion(
         "PLACSP", entry_id or (expediente or titulo or "sin-id"),
@@ -67,11 +101,12 @@ def _procesar_entry(entry, feed_nombre):
         cpv=sorted(set(cpvs))[:8], plazo_presentacion=plazo,
         actualizado=actualizado, subfuente=feed_nombre, texto_extra=resumen,
         pais="España",
+        adjudicatarios=adjudicatarios, importe_adjudicacion=importe_adj,
+        num_ofertas=num_ofertas, fecha_adjudicacion=fecha_adj,
     )
 
 
 def recolectar(ajustes, registro):
-    """Devuelve lista de detecciones en bruto (sin filtrar)."""
     detecciones = []
     fuentes = ajustes["fuentes"]
     max_pag = int(ajustes.get("max_paginas_atom", 20))

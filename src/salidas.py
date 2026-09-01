@@ -127,6 +127,45 @@ def _item_html(i, d):
 </tr></table></td></tr>"""
 
 
+def _item_adj_html(i, d):
+    ent = _esc(d.get("entidad_censo") or d.get("organo", ""))
+    ganadores = d.get("adjudicatarios") or []
+    gan = _esc(" + ".join(ganadores)) if ganadores else "No consta en la publicacion"
+    color_gan = NEGRO if ganadores else GRISCLARO
+    meta = []
+    if d.get("importe_adjudicacion"):
+        imp = f"{d['importe_adjudicacion']:,.0f}".replace(",", ".")
+        meta.append(f'<span style="color:{NEGRO};font-weight:bold">{imp} EUR</span>')
+    elif d.get("importe_eur"):
+        imp = f"{d['importe_eur']:,.0f}".replace(",", ".")
+        meta.append(f'{imp} EUR licitacion')
+    if d.get("num_ofertas"):
+        meta.append(f'{d["num_ofertas"]} ofertas')
+    if d.get("fecha_adjudicacion"):
+        meta.append(f'{_esc(d["fecha_adjudicacion"])}')
+    linea_meta = "&nbsp;&nbsp;/&nbsp;&nbsp;".join(meta)
+    return f"""<tr><td style="padding:18px 0;border-top:1px solid {LINEA}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+<td width="38" valign="top" style="font-family:{F};font-size:13px;color:{GRISCLARO};padding-top:2px">{i:02d}</td>
+<td valign="top" style="font-family:{F}">
+  <div style="font-size:14px;font-weight:bold;color:{color_gan};letter-spacing:-0.2px">{gan}</div>
+  <div style="font-size:12px;color:{GRIS};margin:3px 0 6px">{ent}</div>
+  <div style="font-size:13px;color:{GRIS};line-height:1.5;margin:0 0 8px">{_esc(d.get("titulo", ""))[:180]}</div>
+  <div style="font-size:12px;color:{GRIS}">{linea_meta}</div>
+  <div style="margin-top:8px"><a href="{d.get("enlace", "#")}" style="font-family:{F};font-size:11px;letter-spacing:1.5px;color:{NEGRO};text-decoration:none;font-weight:bold">VER EXPEDIENTE <span style="color:{ROJO}">&#8594;</span></a></div>
+</td></tr></table></td></tr>"""
+
+
+def _cabecera_seccion(titulo, subtitulo):
+    return f"""<tr><td style="padding:38px 0 16px">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td width="10" bgcolor="{ROJO}" style="width:10px;height:10px;font-size:0;line-height:0">&nbsp;</td>
+<td style="font-family:{F};font-size:17px;font-weight:bold;color:{NEGRO};padding-left:12px;letter-spacing:-0.2px">{_esc(titulo)}</td>
+</tr></table>
+<div style="font-family:{F};font-size:12px;color:{GRIS};margin-top:8px">{_esc(subtitulo)}</div>
+</td></tr>"""
+
+
 def _kpi_html(kpis):
     celdas = ""
     for i, (label, valor) in enumerate(kpis[:3]):
@@ -208,6 +247,17 @@ def generar_informe(historico, ajustes):
         sz = f" · sin zanja: {', '.join(d['senales']['sin_zanja'])}" if d.get("senales", {}).get("sin_zanja") else ""
         lineas.append(f"{i}. **[{d.get('score', 0)}]** {d.get('entidad_censo') or d.get('organo', '¿?')} — "
                       f"{d.get('titulo', '')[:180]}{imp}{rp}{sz} · [{d.get('fuente')}]({d.get('enlace', '')})")
+    adjudicadas = sorted(
+        [d for d in recientes
+         if d.get("adjudicatarios") or str(d.get("estado", "")).strip().upper() in ("ADJ", "RES")],
+        key=lambda x: -(x.get("importe_adjudicacion") or x.get("importe_eur") or 0))[:10]
+    if adjudicadas:
+        lineas.append("\n## Adjudicaciones de la semana\n")
+        for d in adjudicadas:
+            gan = " + ".join(d.get("adjudicatarios") or []) or "adjudicatario no consta"
+            imp = f" por {d['importe_adjudicacion']:,.0f} EUR".replace(",", ".") if d.get("importe_adjudicacion") else ""
+            of = f" ({d['num_ofertas']} ofertas)" if d.get("num_ofertas") else ""
+            lineas.append(f"- **{gan}**{imp}{of}: {d.get('organo', '')}: {d.get('titulo', '')[:140]} ({d.get('enlace', '')})")
     lineas.append("\n---\n_Radar automático: verifica siempre fechas e importes en la fuente oficial antes de actuar. "
                   "Traslada las oportunidades maduras al Excel maestro (ficha comercial + scoring de 13 criterios)._")
     (DATA / "informe.md").write_text("\n".join(lineas), encoding="utf-8")
@@ -217,6 +267,10 @@ def generar_informe(historico, ajustes):
             ("Importe agregado", _millones(sum(d.get("importe_eur") or 0 for d in top)) or "0"),
             ("En fase de redacción", str(sum(1 for d in top if d.get("es_redaccion_proyecto"))))]
     cuerpo = items
+    if adjudicadas:
+        cuerpo += _cabecera_seccion("Adjudicaciones de la semana",
+                                    "Quien ha ganado que. Inteligencia competitiva de la ultima semana.")
+        cuerpo += "".join(_item_adj_html(i, d) for i, d in enumerate(adjudicadas, 1))
     (DATA / "informe.html").write_text(
         _envoltorio_html(f"Informe del radar {ahora_utc().strftime('%d/%m/%Y')}",
                          "Rehabilitación y renovación de redes de agua. Tecnologías sin zanja.",
