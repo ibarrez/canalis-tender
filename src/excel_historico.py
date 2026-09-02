@@ -46,6 +46,11 @@ DER = Alignment(horizontal="right", vertical="top")
 
 EUR = '#,##0 "EUR"'
 
+# Horizonte del libro: solo se muestran años desde ANIO_MIN (2025) en adelante.
+# Los expedientes con actividad anterior siguen en la memoria del radar
+# (historico.jsonl) pero no generan pestañas: menos años, más concentración.
+ANIO_MIN = 2025
+
 NUTS2_CCAA = {
     "ES11": "Galicia", "ES12": "Asturias", "ES13": "Cantabria", "ES21": "País Vasco",
     "ES22": "Navarra", "ES23": "La Rioja", "ES24": "Aragón", "ES30": "Madrid",
@@ -56,6 +61,34 @@ NUTS2_CCAA = {
     "PT11": "Norte (PT)", "PT15": "Algarve (PT)", "PT16": "Centro (PT)",
     "PT17": "Lisboa (PT)", "PT18": "Alentejo (PT)", "PT20": "Azores (PT)", "PT30": "Madeira (PT)",
 }
+
+
+# ------------------------------------------------- players vigilados
+def cargar_players():
+    """Lee config/competidores.csv (editable desde GitHub) con la parrilla de
+    empresas vigiladas: especialistas sin zanja y grandes con las que interesa
+    detectar oportunidades de UTE o subcontratación."""
+    import csv
+    from .util import CONFIG
+    players = []
+    ruta = CONFIG / "competidores.csv"
+    if not ruta.exists():
+        return players
+    with open(ruta, encoding="utf-8") as f:
+        for fila in csv.DictReader(f):
+            fila["alias_norm"] = [normalizar(a) for a in (fila.get("aliases") or "").split("|") if a.strip()]
+            fila["alias_norm"].append(normalizar(fila["player"]))
+            players.append(fila)
+    return players
+
+
+def players_de(nombre_ganador, players):
+    """Todos los players cuyo alias aparece en el nombre del ganador (una UTE
+    puede contener a varios)."""
+    n = normalizar(str(nombre_ganador or ""))
+    if not n:
+        return []
+    return [p for p in players if any(a and a in n for a in p["alias_norm"])]
 
 
 # ------------------------------------------------- derivaciones
@@ -212,7 +245,7 @@ def _hoja_portada(wb, historico, hoy, urls):
     guia = [
         ("Vigentes", "Las oportunidades vivas, ordenadas por urgencia. Lo que vence antes, arriba. Usa los filtros de la cabecera (triángulo de cada columna) para acotar por comunidad, servicio o importe."),
         ("Adjudicaciones", "Quién ha ganado qué. Filtra por la columna Ganador para ver todo lo que ha ganado una empresa; por Año o CCAA para acotar. Ejemplo: Ganador = Insituform y Año = 2026."),
-        ("Ranking por año", "Las 15 empresas que más licitaciones de nuestro ámbito ganan cada año (Ranking 2025, Ranking 2026...), con contratos e importe."),
+        ("Ranking por año", "Dos tablas por año: el ranking del segmento sin zanja (CIPP) y la parrilla de los players en seguimiento (los 27 de config/competidores.csv), con sus adjudicaciones de todo nuestro ámbito."),
         ("Análisis", "Resumen por comunidad autónoma y por tipo de servicio: cuántas, cuánto dinero, cuántas vivas."),
         ("Histórico por año", "El archivo completo, una pestaña por año. Nada se borra."),
     ]
@@ -270,49 +303,49 @@ def _hoja_vigentes(wb, historico, hoy):
     ws.auto_filter.ref = f"A{ini - 1}:M{max(fila - 1, ini)}"
 
 
-COLS_ADJ = ["Año", "Fecha adjudicación", "Ganador", "Entidad / órgano", "CCAA", "Servicio",
+COLS_ADJ = ["Año", "Fecha adjudicación", "Ganador", "Player", "Entidad / órgano", "CCAA", "Servicio",
             "Objeto", "Importe adjudicación (EUR)", "Importe licitación (EUR)", "Baja %", "Ofertas", "Enlace"]
-ANCH_ADJ = [7, 12, 34, 26, 16, 24, 50, 15, 15, 8, 8, 12]
+ANCH_ADJ = [7, 12, 34, 16, 26, 16, 24, 50, 15, 15, 8, 8, 12]
 
 
-def _hoja_adjudicaciones(wb, historico, hoy):
+def _hoja_adjudicaciones(wb, historico, hoy, players):
     ws = wb.create_sheet("Adjudicaciones")
     ws.sheet_view.showGridLines = False
     fila = _marca_seccion(ws, 1, 1, "Adjudicaciones",
-                          "Quién ha ganado qué. Filtra por Ganador, Año o CCAA para responder cualquier pregunta.")
+                          "Quién ha ganado qué. Filtra por Ganador, Player, Año o CCAA para responder cualquier pregunta.")
     adjs = [d for d in historico.values() if d.get("adjudicatarios") or es_cerrada(d)]
     fila = _cabeceras(ws, fila, COLS_ADJ, ANCH_ADJ)
     ini = fila
     for d in sorted(adjs, key=lambda x: (str(x.get("fecha_adjudicacion") or x.get("fecha_deteccion") or "")), reverse=True):
         ganadores = d.get("adjudicatarios") or []
+        pl = sorted({p["player"] for g in ganadores for p in players_de(g, players)})
         imp_a, imp_l = d.get("importe_adjudicacion"), d.get("importe_eur")
         baja = round((1 - imp_a / imp_l) * 100, 1) if imp_a and imp_l and imp_l > 0 else None
         _celda(ws, fila, 1, anio_de(d), F_TXT, "0", CENTRO)
         _celda(ws, fila, 2, d.get("fecha_adjudicacion") or "")
         _celda(ws, fila, 3, " + ".join(ganadores) if ganadores else "No consta en la publicación",
                F_NEGRITA if ganadores else F_TXT_GRIS)
-        _celda(ws, fila, 4, d.get("entidad_censo") or d.get("organo", ""))
-        _celda(ws, fila, 5, ccaa_de(d))
-        _celda(ws, fila, 6, servicio_de(d))
-        _celda(ws, fila, 7, (d.get("titulo") or "")[:250])
-        _celda(ws, fila, 8, imp_a, F_NEGRITA, EUR, DER)
-        _celda(ws, fila, 9, imp_l, F_TXT, EUR, DER)
-        _celda(ws, fila, 10, baja, F_TXT, '0.0"%"', CENTRO)
-        _celda(ws, fila, 11, d.get("num_ofertas"), F_TXT, "0", CENTRO)
-        _enlace(ws, fila, 12, d.get("enlace"))
+        _celda(ws, fila, 4, " + ".join(pl), F_ROJO if pl else F_TXT)
+        _celda(ws, fila, 5, d.get("entidad_censo") or d.get("organo", ""))
+        _celda(ws, fila, 6, ccaa_de(d))
+        _celda(ws, fila, 7, servicio_de(d))
+        _celda(ws, fila, 8, (d.get("titulo") or "")[:250])
+        _celda(ws, fila, 9, imp_a, F_NEGRITA, EUR, DER)
+        _celda(ws, fila, 10, imp_l, F_TXT, EUR, DER)
+        _celda(ws, fila, 11, baja, F_TXT, '0.0"%"', CENTRO)
+        _celda(ws, fila, 12, d.get("num_ofertas"), F_TXT, "0", CENTRO)
+        _enlace(ws, fila, 13, d.get("enlace"))
         fila += 1
-    ws.auto_filter.ref = f"A{ini - 1}:L{max(fila - 1, ini)}"
+    ws.auto_filter.ref = f"A{ini - 1}:M{max(fila - 1, ini)}"
 
 
-def _hoja_ranking(wb, historico, anio):
-    ws = wb.create_sheet(f"Ranking {anio}")
-    ws.sheet_view.showGridLines = False
-    fila = _marca_seccion(ws, 1, 1, f"Ranking de ganadores {anio}",
-                          "Las 15 empresas con más adjudicaciones del año en nuestro ámbito. Importe como desempate. Reparto por igual en las UTE multi-lote.")
+def _stats_ranking(historico, anio, solo_sin_zanja=False):
     stats = defaultdict(lambda: {"n": 0, "eur": 0.0, "ccaa": defaultdict(int), "ultima": ""})
     for d in historico.values():
         ganadores = d.get("adjudicatarios") or []
         if not ganadores or anio_de(d) != anio:
+            continue
+        if solo_sin_zanja and servicio_de(d) != "Rehabilitación sin zanja":
             continue
         parte = (d.get("importe_adjudicacion") or 0) / len(ganadores)
         for g in ganadores:
@@ -322,9 +355,12 @@ def _hoja_ranking(wb, historico, anio):
             e["ccaa"][ccaa_de(d)] += 1
             f = str(d.get("fecha_adjudicacion") or d.get("fecha_deteccion") or "")
             e["ultima"] = max(e["ultima"], f)
+    return sorted(stats.items(), key=lambda kv: (-kv[1]["n"], -kv[1]["eur"]))
+
+
+def _tabla_ranking(ws, fila, orden, vacio):
     cols = ["#", "Empresa", "Adjudicaciones", "Importe total (EUR)", "Importe medio (EUR)", "CCAA principal", "Última adjudicación"]
     fila = _cabeceras(ws, fila, cols, [5, 42, 13, 17, 16, 18, 14])
-    orden = sorted(stats.items(), key=lambda kv: (-kv[1]["n"], -kv[1]["eur"]))[:15]
     for i, (empresa, e) in enumerate(orden, 1):
         _celda(ws, fila, 1, i, F_ROJO if i <= 3 else F_TXT, "0", CENTRO)
         _celda(ws, fila, 2, empresa, F_NEGRITA)
@@ -335,7 +371,51 @@ def _hoja_ranking(wb, historico, anio):
         _celda(ws, fila, 7, e["ultima"][:10])
         fila += 1
     if not orden:
-        _celda(ws, fila, 2, "Aún sin adjudicaciones con ganador registrado este año. Se llena sola con los barridos diarios.", F_TXT_GRIS)
+        _celda(ws, fila, 2, vacio, F_TXT_GRIS)
+        fila += 1
+    return fila + 2
+
+
+def _hoja_ranking(wb, historico, anio, players):
+    ws = wb.create_sheet(f"Ranking {anio}")
+    ws.sheet_view.showGridLines = False
+    ws.freeze_panes = None
+    fila = _marca_seccion(ws, 1, 1, f"Segmento sin zanja (CIPP) {anio}",
+                          "El campo de juego de Canalis: solo adjudicaciones clasificadas como rehabilitación sin zanja.")
+    fila = _tabla_ranking(ws, fila, _stats_ranking(historico, anio, solo_sin_zanja=True),
+                          "Aún sin adjudicaciones sin zanja con ganador registrado este año.")
+    # players vigilados: sus adjudicaciones del año en TODO nuestro ámbito
+    fila = _marca_seccion(ws, fila, 1, f"Players en seguimiento {anio}",
+                          "La parrilla de competidores y grandes vigilados (editable en config/competidores.csv). Cuenta todas sus adjudicaciones de nuestro ámbito, gane en el segmento que gane.")
+    acumulado = {p["player"]: {"p": p, "n": 0, "eur": 0.0, "ccaa": defaultdict(int), "ultima": ""} for p in players}
+    for d in historico.values():
+        if anio_de(d) != anio:
+            continue
+        ganadores = d.get("adjudicatarios") or []
+        parte = (d.get("importe_adjudicacion") or 0) / max(1, len(ganadores))
+        for g in ganadores:
+            for p in players_de(g, players):
+                e = acumulado[p["player"]]
+                e["n"] += 1
+                e["eur"] += parte
+                e["ccaa"][ccaa_de(d)] += 1
+                f = str(d.get("fecha_adjudicacion") or d.get("fecha_deteccion") or "")
+                e["ultima"] = max(e["ultima"], f)
+    cols = ["#", "Player", "Tipo", "Adjudicaciones", "Importe total (EUR)", "CCAA principal", "Última adjudicación"]
+    fila = _cabeceras(ws, fila, cols, [5, 30, 22, 13, 17, 18, 14])
+    orden = sorted(acumulado.values(), key=lambda e: (-e["n"], -e["eur"], e["p"]["player"]))
+    for i, e in enumerate(orden, 1):
+        con_datos = e["n"] > 0
+        _celda(ws, fila, 1, i, F_ROJO if con_datos and i <= 3 else F_TXT, "0", CENTRO)
+        _celda(ws, fila, 2, e["p"]["player"], F_NEGRITA if con_datos else F_TXT_GRIS)
+        _celda(ws, fila, 3, e["p"].get("tipo", ""), F_TXT if con_datos else F_TXT_GRIS)
+        _celda(ws, fila, 4, e["n"], F_TXT, "0", CENTRO)
+        _celda(ws, fila, 5, round(e["eur"]) if con_datos else None, F_NEGRITA, EUR, DER)
+        _celda(ws, fila, 6, max(e["ccaa"].items(), key=lambda kv: kv[1])[0] if e["ccaa"] else "")
+        _celda(ws, fila, 7, e["ultima"][:10])
+        fila += 1
+    if not players:
+        _celda(ws, fila, 2, "Sube config/competidores.csv para activar el seguimiento de players.", F_TXT_GRIS)
 
 
 def _tabla_resumen(ws, fila, titulo, clave_fn, historico, hoy):
@@ -379,7 +459,7 @@ ANCH_HIST = [11, 9, 7, 26, 16, 24, 52, 14, 30, 15, 12]
 def _hojas_historico(wb, historico):
     por_anio = defaultdict(list)
     for d in historico.values():
-        por_anio[anio_de(d)].append(d)
+        por_anio[max(anio_de(d), ANIO_MIN)].append(d)
     for anio in sorted(por_anio, reverse=True):
         ws = wb.create_sheet(f"Histórico {anio}")
         ws.sheet_view.showGridLines = False
@@ -404,17 +484,30 @@ def _hojas_historico(wb, historico):
         ws.auto_filter.ref = f"A{ini - 1}:K{max(fila - 1, ini)}"
 
 
-def generar(historico, urls):
+def generar(historico, urls, ajustes=None, entidades=None):
     hoy = ahora_utc().date()
+    # vista del libro: lo vigente siempre + todo lo que pertenezca a ANIO_MIN o después.
+    # Si llegan ajustes y entidades, cada registro se revalida con el filtro vigente:
+    # así, cuando el filtro mejora (p. ej. exclusión de vestuario "manga larga"),
+    # el libro se autolimpia de ruido antiguo sin tocar la memoria del radar.
+    def _pasa_filtro(d):
+        if ajustes is None or entidades is None:
+            return True
+        from . import filtro
+        return bool(filtro.evaluar(dict(d), ajustes, entidades))
+    visible = {k: d for k, d in historico.items()
+               if (vigente(d, hoy) or anio_de(d) >= ANIO_MIN) and _pasa_filtro(d)}
     wb = openpyxl.Workbook()
     wb.remove(wb.active)
-    _hoja_portada(wb, historico, hoy, urls)
-    _hoja_vigentes(wb, historico, hoy)
-    _hoja_adjudicaciones(wb, historico, hoy)
-    anios = sorted({anio_de(d) for d in historico.values()} | {hoy.year}, reverse=True)
+    players = cargar_players()
+    _hoja_portada(wb, visible, hoy, urls)
+    _hoja_vigentes(wb, visible, hoy)
+    _hoja_adjudicaciones(wb, visible, hoy, players)
+    anios = sorted({a for a in (anio_de(d) for d in visible.values()) if a >= ANIO_MIN} | {hoy.year},
+                   reverse=True)
     for anio in anios:
-        _hoja_ranking(wb, historico, anio)
-    _hoja_analisis(wb, historico, hoy)
-    _hojas_historico(wb, historico)
+        _hoja_ranking(wb, visible, anio, players)
+    _hoja_analisis(wb, visible, hoy)
+    _hojas_historico(wb, visible)
     DOCS.mkdir(exist_ok=True)
     wb.save(DOCS / "Radar_Historico_ES-PT.xlsx")

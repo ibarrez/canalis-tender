@@ -19,6 +19,8 @@ from .util import normalizar
 EXCLUSIONES_FIJAS = [
     "festival manga", "manga neumatica", "mangas neumaticas",
     "manga por hombro", "manga de riego",
+    "manga larga", "manga corta", "camiseta", "camisetas", "polo de manga",
+    "vestuario laboral", "ropa de trabajo", "uniformes"
 ]
 
 
