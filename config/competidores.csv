@@ -1,0 +1,28 @@
+player,tipo,pais,ciudad,aliases,vinculadas_notas
+INSITUFORM,Especialista,España,Valdemoro (Madrid),insituform,"Insituform Technologies Iberica SA/SAU (CIF A82420423, constituida 1999); filial del grupo Insituform/Aegion (hoy Azuria, EEUU); el alias captura tambien sus UTE"
+STLIMA,Especialista,España,Madrid,stlima|limpiezas industriales miguel arias|miguel arias,"Razon social: Servicios Tecnicos Limpiezas Industriales Miguel Arias SL; es la misma empresa que el 'Miguel Arias SL' del Excel maestro (+40 anos, manga termo y UVA, CCTV)"
+SANITEC REHABILITACIÓ,Especialista,España,Manresa (Barcelona),sanitec,Sanitec Rehabilitacio SL
+CIPP TECHNOLOGY LINER,Especialista,España,Madrid,cipp technology|rehabilitaciones cipp,CIPP Technology Liner SL (rehabilitacionescipp.com); distribuidor de SAERTEX multiCom; tecnologia UV fibra de vidrio
+AST GRUPO,Especialista,España,Langreo (Asturias),ast grupo|astgrupo,"astgrupo.com; CIPP manga continua + CCTV, especialistas agua potable; misma localidad que Alsertrans: posible vinculacion, verificar"
+NETJET,Especialista,España,Barcelona,netjet|net jet,No confundir con NetJets (aviacion): el filtro de agua ya lo impide
+RETECSA,Especialista,España,Madrid,retecsa,
+ENTUBA,Especialista,España,Zaragoza,entuba,
+GSC SERVICIOS,Especialista,España,Madrid,"gsc servicios|gsc, servicios|gsc obras y servicios","Alias prudentes: 'gsc' solo es demasiado corto; cuando aparezca su razon social exacta en Adjudicaciones, anadirla aqui"
+HIDROCLEAN,Especialista,España,Etxebarri (Bizkaia),hidroclean|hidro clean,
+LIMPA CANAL,Especialista,Portugal,Viseu,limpa canal|limpacanal,limpacanal.pt; reabilitacao de coletores CIPP
+UNNI TECH,Especialista,Portugal,Carregado,unni tech|unnitech,
+REVIPOX,Especialista,Portugal,Ramada,revipox,"revipox.pt; CIPP epoxy lining, cura UV/LED"
+AQUATEC,Sin zanja / obras,España,Barcelona,aquatec,Aquatec Soluciones Medioambientales SAU (grupo Agbar/Veolia); tambien opera variantes 'Aquatec Proyectos'
+MAGTEL,Sin zanja / obras,España,Córdoba,magtel,Grupo Magtel: Magtel Operaciones SLU y otras filiales; el alias las captura todas
+ALSERTRANS,Sin zanja / obras,España,Langreo (Asturias),alsertrans,"Alsertrans SL; misma localidad que AST Grupo: posible vinculacion, verificar"
+LICUAS,Sin zanja / obras,España,Madrid,licuas,Licuas SA
+HIDRAXIS,Sin zanja / obras,España,Castilla y León,hidraxis,
+MUNDO DOS CANALIZADORES,Sin zanja / obras,Portugal,Lisboa,mundo dos canalizadores,
+SORIGUÉ,Generalista / UTE objetivo,España,Barcelona,sorigue,"Sorigue SA, cabecera del grupo; ACSA Obras e Infraestructuras es su filial (ver fila ACSA)"
+ACSA OBRAS E INFRAESTRUCTURAS,Generalista / UTE objetivo,España,Barcelona,"acsa obras|acsa, obras|acsa sorigue|acsa infraestructuras","ACSA Obras e Infraestructuras SAU, grupo Sorigue; alias con contexto para no confundir con otras 'ACSA'"
+LANTANIA,Generalista / UTE objetivo,España,Madrid,lantania,Lantania SA y Lantania Aguas SL
+TEDAGUA,Generalista / UTE objetivo,España,Madrid,tedagua|tecnicas de desalinizacion de aguas,Tecnicas de Desalinizacion de Aguas SA (grupo Cobra/Vinci)
+GS INIMA,Generalista / UTE objetivo,España,Madrid,gs inima|inima environment,GS Inima Environment SA (grupo GS E&C)
+AQUALIA,Generalista / UTE objetivo,España,Madrid,aqualia,FCC Aqualia SA; el alias captura filiales y UTE con la marca
+ACCIONA AGUA,Generalista / UTE objetivo,España,Madrid,"acciona agua|acciona, agua",Acciona Agua SA y Acciona Agua Servicios SL
+SACYR AGUA,Generalista / UTE objetivo,España,Madrid,sacyr agua|valoriza agua,Sacyr Agua SL; antes operaba como Valoriza Agua (alias incluido para capturar historico)
