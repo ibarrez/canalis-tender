@@ -212,7 +212,7 @@ def _envoltorio_html(titulo, subtitulo, cuerpo, kpis=None):
 <tr><td bgcolor="#FFFFFF" style="padding:22px 36px 30px">
 <div style="border-top:1px solid {LINEA};padding-top:16px">
 <a href="{EXCEL_URL}" style="font-family:{F};font-size:11px;letter-spacing:1.5px;color:{NEGRO};text-decoration:none;font-weight:bold">EXCEL MAESTRO <span style="color:{ROJO}">&#8594;</span></a>
-<div style="font-family:{F};font-size:10px;color:{GRISCLARO};line-height:1.6;margin-top:12px">Verifica siempre las fechas e importes en la fuente oficial antes de actuar y traslada las oportunidades maduras al Excel maestro</div>
+<div style="font-family:{F};font-size:10px;color:{GRISCLARO};line-height:1.6;margin-top:12px">Verifica siempre las fechas e importes en la fuente oficial antes de actuar y traslada las oportunidades maduras al Excel maestro. Desarrollado por Jacobo Ibárrez</div>
 </div></td></tr>
 
 </table></td></tr></table></body></html>"""
@@ -269,11 +269,11 @@ def generar_informe(historico, ajustes):
     cuerpo = items
     if adjudicadas:
         cuerpo += _cabecera_seccion("Adjudicaciones de la semana",
-                                    "Quien ha ganado que.")
+                                    "Quién ha ganado qué en nuestro negocio.")
         cuerpo += "".join(_item_adj_html(i, d) for i, d in enumerate(adjudicadas, 1))
     (DATA / "informe.html").write_text(
         _envoltorio_html(f"Informe del radar {ahora_utc().strftime('%d/%m/%Y')}",
-                         "Rehabilitación y renovación de redes de agua. Tecnologías sin zanja.",
+                         "Licitaciones de rehabilitación y renovación de redes de agua.",
                          cuerpo, kpis), encoding="utf-8")
 
 
@@ -349,7 +349,7 @@ def generar_dashboard(historico, estado, ajustes):
  .leyenda{{font-size:12px;color:#555;margin:6px 0 12px}}
 </style></head><body>
 <header><h1> Radar de Licitaciones - España y Portugal</h1>
-<p>Vigilancia automática de rehabilitación y renovación de redes (Tecnologías Sin Zanja) - Última ejecución: {estado.get('ejecutado', '—')} UTC</p></header>
+<p>Vigilancia automática de licitaciones de rehabilitación y renovación de redes (Tecnologías Sin Zanja) - Última ejecución: {estado.get('ejecutado', '—')} UTC</p></header>
 <div class="kpis">
  <div class="kpi"><b>{len(historico)}</b><span>detecciones acumuladas</span></div>
  <div class="kpi"><b>{len(nuevas7)}</b><span>en los últimos 7 días</span></div>
