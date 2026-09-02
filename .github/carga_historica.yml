@@ -1,0 +1,52 @@
+name: Carga historica
+
+on:
+  workflow_dispatch:
+    inputs:
+      anio:
+        description: "Año a cargar (por ejemplo 2025)"
+        required: true
+        type: string
+      desde_mes:
+        description: "Mes inicial (1-12)"
+        default: "1"
+        type: string
+      hasta_mes:
+        description: "Mes final (1-12)"
+        default: "12"
+        type: string
+      fuente:
+        description: "Fuente a cargar"
+        type: choice
+        default: todas
+        options: [todas, perfiles, agregadas, ted]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  carga:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+      - name: Cargar el historico del año pedido
+        run: python backfill_historico.py --anio "${{ inputs.anio }}" --desde-mes "${{ inputs.desde_mes }}" --hasta-mes "${{ inputs.hasta_mes }}" --fuente "${{ inputs.fuente }}"
+      - name: Guardar resultados en el repositorio
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add data docs
+          git diff --cached --quiet || git commit -m "Carga historica ${{ inputs.anio }} (${{ inputs.desde_mes }}-${{ inputs.hasta_mes }}) [skip ci]"
+          git push
