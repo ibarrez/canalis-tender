@@ -51,7 +51,7 @@ def generar_excel(historico, nuevas, ajustes):
 
 
 # ------------------------------------------------ correo HTML (estilo v2.0)
-# Gramatica visual tomada del Polestar Sustainability Report 2025:
+# Gramatica visual tomada del Canalis Brand Book:
 # fondo hueso #EBECE6, rojo #E03C32 como unico acento, Helvetica Neue,
 # tarjetas planas con cifra gigante, filas tipo indice, mucho aire.
 # Imagenes: subir a la carpeta docs/ con estos nombres exactos.
@@ -253,7 +253,7 @@ def generar_informe(historico, ajustes):
     cuerpo = items
     if adjudicadas:
         cuerpo += _cabecera_seccion("Adjudicaciones de la semana",
-                                    "Quien ha ganado que. Inteligencia competitiva de la ultima semana.")
+                                    "Quién ha ganado qué.")
         cuerpo += "".join(_item_adj_html(i, d) for i, d in enumerate(adjudicadas, 1))
     (DATA / "informe.html").write_text(
         _envoltorio_html(f"Informe del radar {ahora_utc().strftime('%d/%m/%Y')}",
@@ -332,7 +332,7 @@ def generar_dashboard(historico, estado, ajustes):
  footer{{padding:14px 28px 30px;font-size:11px;color:#777}}
  .leyenda{{font-size:12px;color:#555;margin:6px 0 12px}}
 </style></head><body>
-<header><h1>💧 Radar de Licitaciones de Agua · España y Portugal</h1>
+<header><h1>💧 Radar de Licitaciones de Agua - España y Portugal</h1>
 <p>Vigilancia automática de rehabilitación y renovación de redes (tecnologías sin zanja) · Última ejecución: {estado.get('ejecutado', '—')} UTC</p></header>
 <div class="kpis">
  <div class="kpi"><b>{len(historico)}</b><span>detecciones acumuladas</span></div>
