@@ -1,6 +1,6 @@
-# Informe del radar — 01/09/2026
+# Informe del radar — 02/09/2026
 
-Detecciones de los últimos 7 días: **115**. Top 10 por puntuación:
+Detecciones de los últimos 7 días: **105**. Top 10 por puntuación:
 
 1. **[80]** ACOSOL — Contratación por lotes de los trabajos de diseño, fabricación, suministro e instalación de manga continua estructural para la rehabilitación de colectores de la red de saneamiento  · 9.990.909 € · sin zanja: manga, manga continua · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=u5Y%2FY5o%2FUeB%2FR5QFTlaM4A%3D%3D)
 2. **[77]** ACOSOL — contratación por lotes del servicio de dirección facultativa de los trabajos de rehabilitación de colectores de la red de saneamiento integral de acosol, s.a. con manga cipp · 500.992 € · sin zanja: cipp, manga · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=259MiIPtVk7mnwcj%2BxbdTg%3D%3D)
@@ -15,8 +15,6 @@ Detecciones de los últimos 7 días: **115**. Top 10 por puntuación:
 
 ## Adjudicaciones de la semana
 
-- **LICUAS, S.A. + UTE CONSERVACIÓN Y SISTEMAS S.A. - TRATAMIENTO INDUSTRIAL DE AGUAS S.A. + UTE SERVICIOS TÉCNICOS DE LIMPIEZAS INDUSTRIALES MIGUEL ARIAS, S.L. – EJECUCIÓN, MANTENIMIENTO Y CONSERVACIÓN DE INFRAESTRUCTURAS, S.L + SOCIEDAD ESPAÑOLA DE AGUAS FILTRADAS, S.A. + LICUAS,S.A.** (13 ofertas): Canal de Isabel II, S.A.: Servicios de conservación y mantenimiento de las redes de saneamiento periférico gestionadas por Canal de Isabel II, S.A., M.P. (https://contratos-publicos.comunidad.madrid/contrato-publico/servicios-conservacion-mantenimiento-redes-saneamiento-periferico-gestionadas)
-- **Acsa Obras e Infraestructuras, SA + HIDRALIA GESTIÓN INTEGRAL DE AGUAS DE ANDALUCÍA, S.A. + UTE REHABILITACION MAGTEL&INSITUFORM + FCC AQUALIA SA** por 34.976.527 EUR (8 ofertas): Consejo de Administración de la Empresa Municipal de Aguas de Córdoba, S.A. (EMACSA): Servicio para la ejecución de actuaciones integrales de mantenimiento, mejora y conservación de infraestructuras del ciclo integral del agua (https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=zZBMviMwMpEeC9GJQOEBkQ%3D%3D)
 - **SOCIEDAD DE FOMENTO AGRÍCOLA CASTELLONENSE, S.A.** por 6.802.435 EUR (1 ofertas): Pleno del Ayuntamiento de Benicàssim: Servicio de depuración, mantenimiento de la red de alcantarillado y emisario del Ayuntamiento de Benicàssim (https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=3uFezCRFv%2B3LIx6q1oPaMg%3D%3D)
 - **UTE PAVASAL EMPRESA CONSTRUCTORA, S.A.U. Y ULLASTRES S.A.** (7 ofertas): Canal de Isabel II, Ente Público: Contrato de Obras del “Proyecto de Renovación de la Red de Saneamiento en el municipio de Santa María de la Alameda. Fase I (PLAN SANEA 2500 (https://contratos-publicos.comunidad.madrid/contrato-publico/contrato-obras-proyecto-renovacion-red-saneamiento-municipio-santa-maria-alameda)
 - **ELECNOR SERVICIOS Y PROYECTOS S.A.U.** (8 ofertas): Canal de Isabel II, Ente Público: Obras del “Proyecto de Renovación de la Red de Saneamiento en el Municipio de Chapinería. Fase I (Plan Sanea 2500)”. CYII 2026/16 (https://contratos-publicos.comunidad.madrid/contrato-publico/obras-proyecto-renovacion-red-saneamiento-municipio-chapineria-fase-i-plan-sanea)
@@ -25,6 +23,8 @@ Detecciones de los últimos 7 días: **115**. Top 10 por puntuación:
 - **adjudicatario no consta**: Ens d'Abastament d'Aigua Ter-Llobregat (ATL): L’objecte del present contracte és l’execució de les obres de manteniment i reparació per a corregir i millorar les condicions d’explotació  (https://contractaciopublica.cat/ca/detall-publicacio/2cd3edde-16d5-4278-931d-968d40ffb17f/300859539)
 - **UTE GSOTO-DTD- EDAR CAÑADAS DE SAN PEDRO** por 2.813.976 EUR (6 ofertas): Entidad Regional de Saneamiento y Depuración de Aguas Residuales (ESAMUR): Estación depuradora de aguas residuales de Cañadas de San Pedro (Murcia) (https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=56qhfPOd%2Fw%2FIGlsa0Wad%2Bw%3D%3D)
 - **PRACE, SERVICIOS Y OBRAS, S.A.-SERANCO, S.A.U.** por 2.445.447 EUR (7 ofertas): Consejo de Administración de Sociedad Mercantil Estatal Aguas de las Cuencas de España, S.A. (ACUAES): Ejecución de las obras del Proyecto "Obras y actuaciones para la mejora de las instalaciones del sistema de abastecimiento del Valle Esgueva (https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=HOwdh03hNTSOUi78BmzhOQ%3D%3D)
+- **PACSA SERVICIOS URBANOS Y DEL MEDIO NATURAL, S.L.** (1 ofertas): Canal de Isabel II, Ente Público: Contrato de Obras del Proyecto de Renovación de la Red de Saneamiento en el municipio de Corpa. Fase I (Plan Sanea 2500).”. CYII2026/30 (https://contratos-publicos.comunidad.madrid/contrato-publico/contrato-obras-proyecto-renovacion-red-saneamiento-municipio-corpa-fase-i-plan)
+- **SIMA SERVICIOS INTEGRALES ALONSO, S.L.** por 967.999 EUR (9 ofertas): Alcaldía del Ayuntamiento de Puçol: Obras 1ª fase del colector unitario de la C/Alicante en Puçol. (https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=WKz%2F6IjRhlfXOjazN1Dw9Q%3D%3D)
 
 ---
 _Radar automático: verifica siempre fechas e importes en la fuente oficial antes de actuar. Traslada las oportunidades maduras al Excel maestro (ficha comercial + scoring de 13 criterios)._
