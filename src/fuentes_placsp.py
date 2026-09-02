@@ -93,6 +93,8 @@ def _procesar_entry(entry, feed_nombre):
     plazo = _buscar_texto(entry, {"EndDate"})
     resumen = _buscar_texto(entry, {"summary"}) or ""
     adjudicatarios, importe_adj, num_ofertas, fecha_adj = _resultados(entry)
+    territorio = _buscar_texto(entry, {"CountrySubentity"})
+    nuts = _buscar_texto(entry, {"CountrySubentityCode"})
 
     return nueva_deteccion(
         "PLACSP", entry_id or (expediente or titulo or "sin-id"),
@@ -103,6 +105,7 @@ def _procesar_entry(entry, feed_nombre):
         pais="España",
         adjudicatarios=adjudicatarios, importe_adjudicacion=importe_adj,
         num_ofertas=num_ofertas, fecha_adjudicacion=fecha_adj,
+        territorio=territorio, nuts=nuts,
     )
 
 

@@ -44,38 +44,22 @@ ANCHOS = [11, 7, 8, 9, 28, 55, 13, 10, 22, 14, 14, 18, 45]
 
 
 def generar_excel(historico, nuevas, ajustes):
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Alertas nuevas"
-    _hoja(ws, ws.title, COLS, ANCHOS)
-    umbral = ajustes.get("umbral_alerta", 60)
-    for d in sorted(nuevas, key=lambda x: -x.get("score", 0)):
-        if d.get("score", 0) >= umbral:
-            ws.append(_fila_det(d))
-    ws2 = wb.create_sheet("Todas las detecciones")
-    _hoja(ws2, ws2.title, COLS, ANCHOS)
-    for d in sorted(historico.values(), key=lambda x: (x.get("fecha_deteccion", ""), x.get("score", 0)), reverse=True):
-        ws2.append(_fila_det(d))
-    for hoja in (ws, ws2):
-        for fila in hoja.iter_rows(min_row=2):
-            for c in fila:
-                c.font = Font(name="Arial", size=9)
-                c.alignment = Alignment(wrap_text=True, vertical="top")
-            if fila[0].row and hoja.cell(fila[0].row, 7).value:
-                hoja.cell(fila[0].row, 7).number_format = '#,##0 "€"'
-        hoja.auto_filter.ref = f"A1:{get_column_letter(len(COLS))}{hoja.max_row}"
-    DATA.mkdir(exist_ok=True)
-    wb.save(DATA / "Radar_Detecciones.xlsx")
+    """Genera el Excel Histórico (repositorio analítico) en docs/, servido por
+    GitHub Pages en una URL fija. Diseño según el Canalis Brand Book."""
+    from . import excel_historico
+    excel_historico.generar(historico, {"interno": EXCEL_INTERNO_URL, "panel": PANEL_URL})
 
 
 # ------------------------------------------------ correo HTML (estilo v2.0)
-# Gramatica visual tomada del Canalis Brand Book:
+# Gramatica visual tomada del Polestar Sustainability Report 2025:
 # fondo hueso #EBECE6, rojo #E03C32 como unico acento, Helvetica Neue,
 # tarjetas planas con cifra gigante, filas tipo indice, mucho aire.
 # Imagenes: subir a la carpeta docs/ con estos nombres exactos.
 LOGO_URL = "https://ibarrez.github.io/canalis-tender/logo.png"        # logotipo canalis en NEGRO, PNG fondo transparente
-FOTO_URL = "https://ibarrez.github.io/canalis-tender/cabecera.jpg"    # foto robot estudio blanco
-EXCEL_URL = "https://canalisst-my.sharepoint.com/:x:/g/personal/jacobo_rodriguez_grupocanalis_com/IQBBLqwTIrSmT5fiVcrQ-Jc0AXzAml8M9y6b6MABa_ffujk?e=Ah2fYE"
+FOTO_URL = "https://ibarrez.github.io/canalis-tender/cabecera.jpg"
+EXCEL_HISTORICO_URL = "https://ibarrez.github.io/canalis-tender/Radar_Historico_ES-PT.xlsx"
+PANEL_URL = "https://ibarrez.github.io/canalis-tender/"    # foto robot estudio blanco
+EXCEL_INTERNO_URL = "https://canalisst-my.sharepoint.com/:x:/g/personal/jacobo_rodriguez_grupocanalis_com/IQBBLqwTIrSmT5fiVcrQ-Jc0AXzAml8M9y6b6MABa_ffujk?e=Ah2fYE"
 
 NEGRO = "#111111"
 GRIS = "#6E6E69"
@@ -211,8 +195,8 @@ def _envoltorio_html(titulo, subtitulo, cuerpo, kpis=None):
 
 <tr><td bgcolor="#FFFFFF" style="padding:22px 36px 30px">
 <div style="border-top:1px solid {LINEA};padding-top:16px">
-<a href="{EXCEL_URL}" style="font-family:{F};font-size:11px;letter-spacing:1.5px;color:{NEGRO};text-decoration:none;font-weight:bold">EXCEL MAESTRO <span style="color:{ROJO}">&#8594;</span></a>
-<div style="font-family:{F};font-size:10px;color:{GRISCLARO};line-height:1.6;margin-top:12px">Verifica siempre las fechas e importes en la fuente oficial antes de actuar y traslada las oportunidades maduras al Excel maestro. Desarrollado por Jacobo Ibárrez</div>
+<a href="{EXCEL_HISTORICO_URL}" style="font-family:{F};font-size:11px;letter-spacing:1.5px;color:{NEGRO};text-decoration:none;font-weight:bold">EXCEL HIST&Oacute;RICO <span style="color:{ROJO}">&#8594;</span></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{EXCEL_INTERNO_URL}" style="font-family:{F};font-size:11px;letter-spacing:1.5px;color:{NEGRO};text-decoration:none;font-weight:bold">EXCEL INTERNO <span style="color:{ROJO}">&#8594;</span></a>
+<div style="font-family:{F};font-size:10px;color:{GRISCLARO};line-height:1.6;margin-top:12px">Verifica siempre las fechas e importes en la fuente oficial antes de actuar y traslada las oportunidades maduras al Excel interno<br>Desarrollado por Jacobo Ib&aacute;rrez</div>
 </div></td></tr>
 
 </table></td></tr></table></body></html>"""
@@ -259,7 +243,7 @@ def generar_informe(historico, ajustes):
             of = f" ({d['num_ofertas']} ofertas)" if d.get("num_ofertas") else ""
             lineas.append(f"- **{gan}**{imp}{of}: {d.get('organo', '')}: {d.get('titulo', '')[:140]} ({d.get('enlace', '')})")
     lineas.append("\n---\n_Radar automático: verifica siempre fechas e importes en la fuente oficial antes de actuar. "
-                  "Traslada las oportunidades maduras al Excel maestro (ficha comercial + scoring de 13 criterios)._")
+                  "Traslada las oportunidades maduras al Excel interno (ficha comercial + scoring de 13 criterios)._")
     (DATA / "informe.md").write_text("\n".join(lineas), encoding="utf-8")
     items = "".join(_item_html(i, d) for i, d in enumerate(top, 1)) or \
         f'<tr><td style="font-family:{F};font-size:13px;color:{GRIS};padding:14px 0"><i>Sin detecciones relevantes en la ventana.</i></td></tr>'
@@ -269,11 +253,11 @@ def generar_informe(historico, ajustes):
     cuerpo = items
     if adjudicadas:
         cuerpo += _cabecera_seccion("Adjudicaciones de la semana",
-                                    "Quién ha ganado qué en nuestro negocio.")
+                                    "Quien ha ganado que. Inteligencia competitiva de la ultima semana.")
         cuerpo += "".join(_item_adj_html(i, d) for i, d in enumerate(adjudicadas, 1))
     (DATA / "informe.html").write_text(
         _envoltorio_html(f"Informe del radar {ahora_utc().strftime('%d/%m/%Y')}",
-                         "Licitaciones de rehabilitación y renovación de redes de agua.",
+                         "Rehabilitación y renovación de redes de agua. Tecnologías sin zanja.",
                          cuerpo, kpis), encoding="utf-8")
 
 
@@ -330,7 +314,7 @@ def generar_dashboard(historico, estado, ajustes):
     avisos = "".join(f"<li>{_esc(a)}</li>" for a in estado.get("registro", []) if "aviso" in a)
     html = f"""<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Radar de Licitaciones ES-PT</title>
+<title>Radar de Licitaciones de Agua ES-PT</title>
 <style>
  body{{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f5f7fa;color:#1a1a2e}}
  header{{background:#1F3864;color:#fff;padding:22px 28px}}
@@ -348,8 +332,8 @@ def generar_dashboard(historico, estado, ajustes):
  footer{{padding:14px 28px 30px;font-size:11px;color:#777}}
  .leyenda{{font-size:12px;color:#555;margin:6px 0 12px}}
 </style></head><body>
-<header><h1> Radar de Licitaciones - España y Portugal</h1>
-<p>Vigilancia automática de licitaciones de rehabilitación y renovación de redes (Tecnologías Sin Zanja) - Última ejecución: {estado.get('ejecutado', '—')} UTC</p></header>
+<header><h1>💧 Radar de Licitaciones de Agua · España y Portugal</h1>
+<p>Vigilancia automática de rehabilitación y renovación de redes (tecnologías sin zanja) · Última ejecución: {estado.get('ejecutado', '—')} UTC</p></header>
 <div class="kpis">
  <div class="kpi"><b>{len(historico)}</b><span>detecciones acumuladas</span></div>
  <div class="kpi"><b>{len(nuevas7)}</b><span>en los últimos 7 días</span></div>
