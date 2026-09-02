@@ -20,7 +20,10 @@ EXCLUSIONES_FIJAS = [
     "festival manga", "manga neumatica", "mangas neumaticas",
     "manga por hombro", "manga de riego",
     "manga larga", "manga corta", "camiseta", "camisetas", "polo de manga",
-    "vestuario laboral", "ropa de trabajo", "uniformes"
+    "vestuario laboral", "ropa de trabajo", "uniformes",
+    "salon del manga", "feria del manga", "salon manga", "manga y anime",
+    "comic", "anime", "cosplay", "cultura japonesa",
+    "antimedusas", "socorrismo", "salvamento"
 ]
 
 
@@ -60,6 +63,19 @@ def evaluar(det, ajustes, entidades):
                 break
         if entidad_match:
             break
+
+    # "manga"/"mangas" son palabras traicioneras (La Manga del Mar Menor, salones
+    # del manga...): a secas solo cuentan como señal si el texto habla de redes,
+    # tuberías o agua. Las variantes específicas (manga continua, CIPP, curada
+    # in situ...) siguen valiendo por sí solas.
+    SZ_DEBILES = {"manga", "mangas"}
+    if sz and set(sz) <= SZ_DEBILES:
+        apoyo = ctx or cpv_ok or _contiene(tn, ["colector", "colectores", "tuberia", "tuberias",
+                                                "saneamiento", "alcantarillado", "abastecimiento",
+                                                "conduccion", "conducciones", "coletor", "tubagem",
+                                                "tubagens", "esgoto"])
+        if not apoyo:
+            sz = []
 
     relevante = bool(sz) or bool(entidad_match and (ctx or cpv_ok or rp)) or (cpv_ok and ctx) or (ctx and rp)
     if not relevante:

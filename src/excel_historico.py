@@ -340,7 +340,7 @@ def _hoja_adjudicaciones(wb, historico, hoy, players):
 
 
 def _stats_ranking(historico, anio, solo_sin_zanja=False):
-    stats = defaultdict(lambda: {"n": 0, "eur": 0.0, "ccaa": defaultdict(int), "ultima": ""})
+    stats = defaultdict(lambda: {"nombre": "", "n": 0, "eur": 0.0, "ccaa": defaultdict(int), "ultima": ""})
     for d in historico.values():
         ganadores = d.get("adjudicatarios") or []
         if not ganadores or anio_de(d) != anio:
@@ -349,13 +349,14 @@ def _stats_ranking(historico, anio, solo_sin_zanja=False):
             continue
         parte = (d.get("importe_adjudicacion") or 0) / len(ganadores)
         for g in ganadores:
-            e = stats[g]
+            e = stats[normalizar(str(g))]  # mismas empresas con distinta puntuación/mayúsculas se agrupan
+            e["nombre"] = e["nombre"] or str(g)
             e["n"] += 1
             e["eur"] += parte
             e["ccaa"][ccaa_de(d)] += 1
             f = str(d.get("fecha_adjudicacion") or d.get("fecha_deteccion") or "")
             e["ultima"] = max(e["ultima"], f)
-    return sorted(stats.items(), key=lambda kv: (-kv[1]["n"], -kv[1]["eur"]))
+    return sorted(((e["nombre"], e) for e in stats.values()), key=lambda kv: (-kv[1]["n"], -kv[1]["eur"]))
 
 
 def _tabla_ranking(ws, fila, orden, vacio):
