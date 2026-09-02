@@ -8,8 +8,8 @@ Detecciones de los últimos 7 días: **20**. Top 10 por puntuación:
 4. **[43]** Ajuntament de Sant Feliu de Guíxols — El objeto del presente contrato es la prestación del servicio de mantenimiento, conservación, inspección y limpieza de la red de alcantarillado del término municipal de Sant Feliu  · 1.016.374 € · [PLACSP](https://contractaciopublica.cat/ca/detall-publicacio/6d8b7d9f-f3b1-48bc-889b-e6e04bacaf5e/300866915)
 5. **[42]** Alcaldía del Ayuntamiento de Salamanca — Obras de Renovación de la red de distribución de agua potable en varias calles de los barrios San Cristóbal, San Esteban y Fontana y en Pizarrales Norte. · 538.922 € · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=Nzb4BMmgaFfIGlsa0Wad%2Bw%3D%3D)
 6. **[40]** Xunta de Goberno Local del Ayuntamiento de Boiro — Contratación para a execución da obra de Renovación de tramo de tubería de impulsión á estación de tratamento de auga potable (ETAP) de Boiro, mediante procedemento aberto e TRAMIT · 79.633 € · [PLACSP](https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=g3pTkEh1QTyS81gZFETWmA%3D%3D)
-7. **[25]** Ajuntament de Sant Feliu de Guíxols — España – Servicios de gestión de alcantarillados – Contrato para el servicio de mantenimiento, conservación y reposiciones o actuaciones de la red de alcantarillado y pluviales y e · [TED](https://ted.europa.eu/es/notice/-/detail/593652-2026)
-8. **[25]** Junta de Gobierno del Ayuntamiento de Castellón de la Plana — España – Servicios de alcantarillado – Servicio de conservación y mantenimiento de las estaciones de bombeo de la red de alcantarillado y control de vertidos en el término municipa · [TED](https://ted.europa.eu/es/notice/-/detail/604951-2026)
+7. **[25]** Junta de Gobierno del Ayuntamiento de Castellón de la Plana — España – Servicios de alcantarillado – Servicio de conservación y mantenimiento de las estaciones de bombeo de la red de alcantarillado y control de vertidos en el término municipa · [TED](https://ted.europa.eu/es/notice/-/detail/604951-2026)
+8. **[25]** Ajuntament de Sant Feliu de Guíxols — España – Servicios de gestión de alcantarillados – Contrato para el servicio de mantenimiento, conservación y reposiciones o actuaciones de la red de alcantarillado y pluviales y e · [TED](https://ted.europa.eu/es/notice/-/detail/593652-2026)
 
 ## Adjudicaciones de la semana
 
@@ -25,4 +25,4 @@ Detecciones de los últimos 7 días: **20**. Top 10 por puntuación:
 - **adjudicatario no consta**: Alcaldía del Ayuntamiento de Almussafes: Contrato de servicios de redacción del proyecto básico y de ejecución, dirección facultativa de las obras y coordinación en materia de segur (https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=XL%2BNTyDcCyWHCIsjvJ3rhQ%3D%3D)
 
 ---
-_Radar automático: verifica siempre fechas e importes en la fuente oficial antes de actuar. Traslada las oportunidades maduras al Excel maestro (ficha comercial + scoring de 13 criterios)._
+_Radar automático: verifica siempre fechas e importes en la fuente oficial antes de actuar. Traslada las oportunidades maduras al Excel interno (ficha comercial + scoring de 13 criterios)._
