@@ -76,6 +76,80 @@ def _procesar_zip(ruta_zip, etiqueta, ajustes, entidades, acumulado, registro):
     return leidos, relevantes
 
 
+TED_API = "https://api.ted.europa.eu/v3/notices/search"
+
+
+def _ted_texto(v):
+    """Los campos de TED llegan multilingües (dict) o como lista; devuelve un texto."""
+    if isinstance(v, dict):
+        for idioma in ("spa", "por", "eng"):
+            if v.get(idioma):
+                return _ted_texto(v[idioma])
+        v = next(iter(v.values()), "")
+    if isinstance(v, list):
+        return "; ".join(str(x) for x in v[:3])
+    return str(v or "")
+
+
+def _cargar_ted(anio, mes, ajustes, entidades, acumulado, registro):
+    import calendar
+    from src.util import nueva_deteccion
+    d1 = f"{anio}{mes:02d}01"
+    d2 = f"{anio}{mes:02d}{calendar.monthrange(anio, mes)[1]:02d}"
+    cpvs = ajustes.get("ted_cpvs") or ajustes.get("cpv_incluir", [])[:6]
+    cpv_q = " OR ".join(f"classification-cpv={c}" for c in cpvs)
+    q = f"(buyer-country=ESP OR buyer-country=PRT) AND ({cpv_q}) AND publication-date>={d1} AND publication-date<={d2}"
+    campos = ["publication-number", "notice-title", "buyer-name", "publication-date",
+              "classification-cpv", "deadline-receipt-tenders-date-lot"]
+    token, pagina, leidos, relevantes = None, 0, 0, 0
+    while pagina < 40:
+        cuerpo = {"query": q, "limit": 250, "scope": "ALL", "paginationMode": "ITERATION"}
+        if campos:
+            cuerpo["fields"] = campos
+        if token:
+            cuerpo["iterationNextToken"] = token
+        try:
+            r = requests.post(TED_API, json=cuerpo, timeout=120)
+            if r.status_code == 400 and campos:
+                campos = None  # algún nombre de campo cambió: reintenta con los de serie
+                continue
+            r.raise_for_status()
+            datos = r.json()
+        except Exception as e:  # noqa: BLE001
+            registro.append(f"[TED {anio}-{mes:02d}] aviso: {e}")
+            break
+        avisos = datos.get("notices", [])
+        for n in avisos:
+            leidos += 1
+            num = str(n.get("publication-number", "")).strip()
+            titulo = _ted_texto(n.get("notice-title"))
+            organo = _ted_texto(n.get("buyer-name"))
+            if not num or not titulo:
+                continue
+            d = nueva_deteccion(
+                "TED", num, titulo, organo,
+                f"https://ted.europa.eu/es/notice/-/detail/{num}",
+                cpv=[str(c) for c in (n.get("classification-cpv") or [])][:8]
+                if isinstance(n.get("classification-cpv"), list) else [],
+                plazo_presentacion=_ted_texto(n.get("deadline-receipt-tenders-date-lot"))[:10],
+                pais="España/Portugal (TED)",
+            )
+            fecha_pub = _ted_texto(n.get("publication-date"))[:10]
+            if len(fecha_pub) == 10:
+                d["fecha_deteccion"] = fecha_pub
+            if not filtro.evaluar(d, ajustes, entidades):
+                continue
+            relevantes += 1
+            k = clave_canonica(d)
+            d["id"] = k
+            acumulado[k] = fusionar(acumulado[k], d) if k in acumulado else d
+        token = datos.get("iterationNextToken")
+        pagina += 1
+        if not token or not avisos:
+            break
+    registro.append(f"[TED {anio}-{mes:02d}] {leidos} avisos, {relevantes} relevantes")
+
+
 def _descargar(url, registro):
     try:
         resp = requests.get(url, headers=CABECERAS, timeout=600, stream=True)
@@ -99,7 +173,7 @@ def main():
     ap.add_argument("--anio", type=int)
     ap.add_argument("--desde-mes", type=int, default=1)
     ap.add_argument("--hasta-mes", type=int, default=12)
-    ap.add_argument("--fuente", choices=["ambas", "perfiles", "agregadas"], default="ambas")
+    ap.add_argument("--fuente", choices=["todas", "perfiles", "agregadas", "ted"], default="todas")
     ap.add_argument("--archivo", help="zip local (modo prueba)")
     args = ap.parse_args()
 
@@ -115,19 +189,27 @@ def main():
         if not args.anio:
             ap.error("indica --anio o --archivo")
         hoy = ahora_utc()
-        fuentes = ["perfiles", "agregadas"] if args.fuente == "ambas" else [args.fuente]
+        if args.fuente == "todas":
+            fuentes = ["perfiles", "agregadas", "ted"]
+        else:
+            fuentes = [args.fuente]
         for mes in range(args.desde_mes, args.hasta_mes + 1):
-            if (args.anio, mes) >= (hoy.year, hoy.month):
-                registro.append(f"[plan] {args.anio}-{mes:02d} aún sin zip mensual cerrado; lo cubre el barrido diario")
-                continue
             aaaamm = f"{args.anio}{mes:02d}"
             for fuente in fuentes:
-                url = URLS[fuente].format(aaaamm=aaaamm)
-                ruta = _descargar(url, registro)
-                if not ruta:
-                    continue
-                _procesar_zip(ruta, f"{fuente} {aaaamm}", ajustes, entidades, historico, registro)
-                Path(ruta).unlink(missing_ok=True)
+                if fuente == "ted":
+                    if (args.anio, mes) > (hoy.year, hoy.month):
+                        continue
+                    _cargar_ted(args.anio, mes, ajustes, entidades, historico, registro)
+                else:
+                    if (args.anio, mes) >= (hoy.year, hoy.month):
+                        registro.append(f"[plan] {fuente} {aaaamm} aún sin zip mensual cerrado; lo cubre el barrido diario")
+                        continue
+                    url = URLS[fuente].format(aaaamm=aaaamm)
+                    ruta = _descargar(url, registro)
+                    if not ruta:
+                        continue
+                    _procesar_zip(ruta, f"{fuente} {aaaamm}", ajustes, entidades, historico, registro)
+                    Path(ruta).unlink(missing_ok=True)
                 guardar_historico(historico)  # guardado incremental: si algo cae, lo hecho queda
                 print(f"{fuente} {aaaamm}: histórico ahora {len(historico)} expedientes")
 
