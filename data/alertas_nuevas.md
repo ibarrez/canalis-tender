@@ -1,8 +1,9 @@
-## 4 detección(es) nueva(s) con score ≥ 60
+## 5 detección(es) nueva(s) con score ≥ 60
 
-- **[65]** Canal de Isabel II — España – Obras de alcantarillado – OBRAS DE MEJORA DE REDES DE SANEAMIENTO GESTIONADAS POR CANAL ISABEL II S.A. · 50.746.446 € → https://ted.europa.eu/es/notice/-/detail/699845-2026
-- **[65]** Canal de Isabel II — España – Obras de alcantarillado – OBRAS DE MEJORA DE REDES DE SANEAMIENTO GESTIONADAS POR CANAL ISABEL II S.A. · 54.572.487 € → https://ted.europa.eu/es/notice/-/detail/696987-2026
-- **[63]** SCPSA — Servicios de la Comarca de Pamplona — Colector de Iza (00000683_001) · 1.096.486 € → https://hacienda.navarra.es/sicpportal/mtoAnunciosModalidad.aspx?cod=2609301952173E1C1DE2
-- **[61]** Consorcio de Aguas Bilbao Bizkaia — Obra de mejora de la red de abastecimiento en los barrios Isla Bekoa y Kanala de Gautegiz-Arteaga · 197.314 € → https://www.contratacion.euskadi.eus/webkpe00-kpeperfi/es/contenidos/anuncio_contratacion/expjaso745026/es_doc/index.html
+- **[64]** ACUAES — Ejecución de las obras del Proyecto 06/10 de Emisario del Bajo Iregua (La Rioja), Adenda 11/14 y Adenda 03/16. Hinca y colectores entre los pozos P14BIS y pozo 17. · 2.209.549 € → https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=NYmQ7cUAly0Xhk1FZxEyvw%3D%3D
+- **[64]** Canal de Isabel II — Obras del "Proyecto de Renovación de la red de saneamiento en el municipio de Titulcia. Fase I (PLAN SANEA 2500)". CYII 2026/53 · 1.652.946 € → https://contratos-publicos.comunidad.madrid/contrato-publico/obras-proyecto-renovacion-red-saneamiento-municipio-titulcia-fase-i-plan-sanea
+- **[62]** Empresa de Transformación Agraria S.A.,S.M.E., M.P., (TRAGSA) — UT2 Rehabilitación de un tramo de tubería de abastecimiento de agua mediante metodología sin zanja con tubería flexible en la obra proyecto para la renovación de la conducción de transporte de agua po · 593.683 € → https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvl=VomqTzNeqN7VGIpKDxgsAQ%3D%3D
+- **[62]** SCPSA — Servicios de la Comarca de Pamplona — Conexión colector norte a EDAR Monreal (00001092_001) · 679.378 € → https://hacienda.navarra.es/sicpportal/mtoAnunciosModalidad.aspx?cod=26101319340271785F9F
+- **[61]** Consorcio de Aguas Bilbao Bizkaia — Obra de mejora de la red de abastecimiento en el barrio Tala de Bermeo · 239.894 € → https://www.contratacion.euskadi.eus/webkpe00-kpeperfi/es/contenidos/anuncio_contratacion/expjaso751409/es_doc/index.html
 
 Revisar, verificar en fuente oficial y pasar al Excel maestro si procede.
